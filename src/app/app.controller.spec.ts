@@ -17,7 +17,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should be defined"', () => {
-      expect(appController).toBeDefined;
+      expect(appController.health()).toEqual('OK, server is running');
     });
   });
 });
