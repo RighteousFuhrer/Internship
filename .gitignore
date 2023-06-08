@@ -38,5 +38,6 @@ lerna-debug.log*
 .env
 
 # db
-/data
+/db
 docker.env
+ormconfig.ts
