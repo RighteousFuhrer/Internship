@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { version, name, description } from '../package.json';
-import { AppModule } from './app/app.module';
+import { version, name, description } from 'package.json';
+import { AppModule } from './modules/app/app.module';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap(): Promise<void> {
@@ -23,8 +23,8 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   });
 
-  await app.listen(configService.get('port')  || 5555, () => {
-    Logger.log('listening on port ' + configService.get('port'));
+  await app.listen(<number>configService.get('port'), () => {
+    Logger.log('listening on port ' +<string>configService.get('port') );
   });
 }
 bootstrap();
