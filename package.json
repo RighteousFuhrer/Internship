@@ -16,10 +16,10 @@
     "test:cov": "jest --coverage",
     "compose": "docker-compose up",
     "typeorm": "npm run build && npx typeorm-ts-node-esm -d ormconfig.ts",
-    "migration:c": "npm run typeorm -- migration:create",
-    "migration:g": "npm run typeorm -- migration:generate",
-    "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm -- migration:revert"
+    "typeorm:c": "npx typeorm migration:create",
+    "typeorm:g": "npm run typeorm -- migration:generate",
+    "typeorm:s": "npm run typeorm -- migration:run",
+    "typeorm:r": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

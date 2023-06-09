@@ -1,4 +1,5 @@
 import Joi from 'joi';
+
 import type { IAppConfig } from './interface';
 
 export const validationSchema = Joi.object<{ values: IAppConfig }>({

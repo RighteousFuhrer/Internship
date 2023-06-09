@@ -5,9 +5,11 @@ import { version, name, description } from 'package.json';
 import { AppModule } from './modules/app/app.module';
 import { Logger } from '@nestjs/common';
 
+import type { IAppConfig } from './config/interface';
+
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
+  const configService = app.get<ConfigService<IAppConfig, true>>(ConfigService);
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle(name)
@@ -23,8 +25,8 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   });
 
-  await app.listen(<number>configService.get('port'), () => {
-    Logger.log('listening on port ' +<string>configService.get('port') );
+  await app.listen(configService.get('port'), () => {
+    Logger.log('listening on port ' + configService.get('port'));
   });
 }
 bootstrap();
