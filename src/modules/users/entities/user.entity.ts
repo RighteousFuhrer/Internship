@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Cart } from 'src/modules/carts/entities/cart.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -35,5 +36,8 @@ export class User {
 
   @Column({ type: 'bytea' })
   public image: Buffer;
+
+  @OneToOne(() => Cart, (cart) => cart.user)
+  public cart: Cart | undefined;
 
 }
