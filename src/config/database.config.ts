@@ -1,5 +1,6 @@
-import type { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import type { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 
 export function get_db_config(): TypeOrmModuleAsyncOptions {
   return {
