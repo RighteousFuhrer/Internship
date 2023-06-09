@@ -1,10 +1,16 @@
-import { Category } from 'src/modules/categories/entities/category.entity';
+import { Cart } from 'src/modules/carts/entities/cart.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Product {
+export class Product_list {
 
-  constructor(id:number, price:number, name:string, total_sold:number,image:Buffer) {
+  constructor(
+    id: number,
+    price: number,
+    name: string,
+    total_sold: number,
+    image: Buffer,
+  ) {
     this.id = id;
     this.price = price;
     this.name = name;
@@ -27,7 +33,7 @@ export class Product {
   @Column({ type: 'bytea' })
   public image: Buffer;
 
-  @ManyToOne(()=> Category, (category) => category.products, { onDelete : 'SET NULL' })
-  public category: Category | undefined;
+  @ManyToOne(() => Cart, (cart) => cart.product_lists, { onDelete: 'CASCADE' })
+  public cart: Cart | undefined;
 
 }
