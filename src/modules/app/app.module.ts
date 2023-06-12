@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { configuration } from '../../config/configuration';
-import { get_db_config } from '../../config/database.config';
-import { validationSchema } from '../../config/validation';
+import appConfig from '../../config/app.config';
+import dbConfig from '../../config/database.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -11,10 +10,15 @@ import { AppService } from './app.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
-      validationSchema,
+      load: [appConfig, dbConfig],
     }),
-    TypeOrmModule.forRootAsync(get_db_config()),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        ...(await configService.get('database')),
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
