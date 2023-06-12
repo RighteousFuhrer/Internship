@@ -40,4 +40,3 @@ lerna-debug.log*
 # db
 /db
 docker.env
-ormconfig.ts

@@ -1,20 +1,38 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { registerAs } from '@nestjs/config';
+import Joi from 'joi';
 
-import type { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import type { IDbConfig } from './interfaces';
 
-export function get_db_config(): TypeOrmModuleAsyncOptions {
-  return {
-    imports: [ConfigModule],
-    inject: [ConfigService],
-
-    useFactory: (configService: ConfigService) => ({
-      type: 'postgres',
-      host: configService.get('postgres_host'),
-      port: configService.get('postgres_port'),
-      username: configService.get('postgres_user'),
-      password: configService.get('postgres_password'),
-      database: configService.get('postgres_db'),
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    }),
+export default registerAs('database', (): IDbConfig => {
+  const values = {
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST as string,
+    port: Number(process.env.POSTGRES_PORT),
+    username: process.env.POSTGRES_USER as string,
+    password: process.env.POSTGRES_PASSWORD as string,
+    database: process.env.POSTGRES_DB as string,
+    name: 'db-connection',
+    entities: ['dist/**/**.entity.{ts,js}'],
+    migrations: ['dist/**/migrations/*.{ts,js}'],
   };
-}
+
+  const schema = Joi.object<IDbConfig>({
+    type: Joi.string().valid('postgres').default('postgres'),
+    host: Joi.string().default('localhost'),
+    port: Joi.number().integer().default(5432),
+    database: Joi.string().required(),
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+    name: Joi.string(),
+    entities: Joi.array(),
+    migrations: Joi.array(),
+  });
+
+  const { error } = schema.validate(values, { abortEarly: false });
+
+  if (error) {
+    throw new Error(`Validation failed - ${error.message}`);
+  }
+
+  return values;
+});

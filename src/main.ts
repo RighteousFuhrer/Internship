@@ -5,7 +5,7 @@ import { version, name, description } from 'package.json';
 import { AppModule } from './modules/app/app.module';
 import { Logger } from '@nestjs/common';
 
-import type { IAppConfig } from './config/interface';
+import type { IAppConfig } from './config/interfaces';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -25,8 +25,10 @@ async function bootstrap(): Promise<void> {
     credentials: true,
   });
 
-  await app.listen(configService.get('port'), () => {
-    Logger.log('listening on port ' + configService.get('port'));
+  const port = configService.get('port', { infer: true });
+
+  await app.listen(port, () => {
+    Logger.log('listening on port ' + port);
   });
 }
 bootstrap();
