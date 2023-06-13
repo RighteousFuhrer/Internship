@@ -3,11 +3,11 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 import type { AuthDto } from '../dtos/auth.dto';
 import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { Tokens } from '../types/tokens.type';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -36,12 +36,17 @@ export class AuthService {
     return tokens;
   }
 
-  public async logout(): Promise<Tokens> {
-    return await { access_token: '', refresh_token: '' };
+  public async logout(id : number): Promise<void> {
+    await this.usersService.updateToken(id, null);
   }
 
-  public async refresh(): Promise<Tokens> {
-    return await { access_token: '', refresh_token: '' };
+  public async refresh(id : number, rt:string): Promise<Tokens> {
+    const user = await this.usersService.validateToken(id, rt);
+
+    const tokens = await this.getTokens(user.id, user.email);
+    this.updateToken(user.id, tokens.refresh_token);
+
+    return tokens;
   }
 
   public async updateToken(id: number, rt: string): Promise<void> {

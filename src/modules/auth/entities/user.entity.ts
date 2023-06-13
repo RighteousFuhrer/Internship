@@ -1,6 +1,5 @@
 import { Cart } from '../../sale/entities/cart.entity';
 import { BeforeInsert, Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-
 import * as bcrypt from 'bcrypt';
 
 @Entity()
@@ -24,8 +23,8 @@ export class User {
   @Column({ type: 'bytea', nullable: true })
   public image!: Buffer;
 
-  @Column({  nullable: true })
-  public hashedRt!: string;
+  @Column({ type:'text', nullable: true })
+  public hashedRt!: string | null;
 
   @OneToOne(() => Cart, (cart) => cart.user)
   public cart!: Cart;

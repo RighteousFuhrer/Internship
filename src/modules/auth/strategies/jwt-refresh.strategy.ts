@@ -1,28 +1,25 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import type { Request } from 'express';
-import { Injectable } from '@nestjs/common';
-
-type Payload = {
-  sub: string;
-  name: string;
-}
+import type { JwtPayload, JwtRefreshPayload } from '../types/tokens.type';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
 
-  constructor() {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'rt-secret',
+      secretOrKey: configService.get('jwt_rt_secret', { infer: true }),
       passReqToCallback:true,
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public validate(req:Request, payload: Payload) :  any {
-    const refreshToken = req.get('authorization')?.replace('Bearer', '').trim();
+  public validate(req:Request, payload: JwtPayload) :  JwtRefreshPayload {
+    const refreshToken = req.get('authorization')?.replace('Bearer', '').trim() || '';
+
     return {
       ...payload,
       refreshToken,
