@@ -52,25 +52,40 @@ export class UsersService {
     const passwordsMatches = await bcrypt.compare(dto.password, user.password);
 
     if (!passwordsMatches) {
-      throw new ForbiddenException('Passwords do not match');
+      throw new ForbiddenException('Invalid password');
     }
 
     return user;
   }
 
-  public async updateToken(id: number, rt: string): Promise<boolean> {
+  public async validateToken(id:number, rt:string) : Promise<UserDto> {
+    const user = await this.findOneById(id);
+
+    if(!user) throw new NotFoundException('User not found');
+
+    if(!user.hashedRt) throw new ForbiddenException('Token expired');
+
+    const rtMathes = await bcrypt.compare(rt, user.hashedRt);
+
+    if(!rtMathes) throw new ForbiddenException('Invalid refresh token');
+
+    return user;
+  }
+
+  public async updateToken(id: number, rt: string | null ): Promise<boolean> {
     const user = await this.userRepo.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException();
 
-    const newRt = await bcrypt.hash(rt, 10);
+    let newRt : string | null = null;
 
-    const res = await this.userRepo.update(id, { ...user, hashedRt: newRt });
-
-    if (res.affected) {
-      return true;
+    if(rt) {
+      newRt = await bcrypt.hash(rt,10);
     }
-    return false;
+
+    await this.userRepo.update(id, { ...user, hashedRt: newRt });
+
+    return true;
   }
 
 }
