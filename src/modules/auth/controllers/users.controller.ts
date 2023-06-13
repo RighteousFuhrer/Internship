@@ -10,7 +10,7 @@ import { CreateUserDto } from '../dtos/createUser.dto';
 import { UsersService } from '../services/users.service';
 
 import type { UserDto } from '../dtos/user.dto';
-import type { User } from '../entities/user.entity';
+
 @Controller('users')
 export class UsersController {
 
@@ -37,7 +37,7 @@ export class UsersController {
   }
 
   @Post()
-  public async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  public async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     return this.usersService.create(createUserDto);
   }
 

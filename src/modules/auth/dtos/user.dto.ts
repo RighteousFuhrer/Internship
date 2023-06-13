@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsBase64, IsAlpha } from 'class-validator';
+import { IsEmail, IsNumber, IsBase64, IsAlpha, IsString } from 'class-validator';
 
 export class UserDto {
 
@@ -16,5 +16,8 @@ export class UserDto {
 
   @IsAlpha()
   public last_name!: string;
+
+  @IsString()
+  public hashedRt!: string;
 
 }
