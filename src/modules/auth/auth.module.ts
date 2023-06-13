@@ -10,10 +10,11 @@ import { JwtStrategy } from './strategies/jwt-access.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [PassportModule, JwtModule.register({}),TypeOrmModule.forFeature([User])],
   controllers: [AuthController, UsersController],
-  providers: [UsersService, AuthService, LocalStrategy, JwtStrategy, JwtAuthGuard],
+  providers: [UsersService, AuthService, LocalStrategy, JwtStrategy, JwtAuthGuard, ConfigService],
 })
 export class AuthModule {}
