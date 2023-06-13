@@ -4,8 +4,6 @@ export interface IAppConfig extends IServerConfig {
 
 export interface IServerConfig {
   port: number;
-  jwt_rt_secret: string;
-  jwt_at_secret: string;
 }
 
 export interface IDbConfig {

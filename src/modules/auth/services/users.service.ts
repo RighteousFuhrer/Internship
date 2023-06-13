@@ -85,34 +85,4 @@ export class UsersService {
     return user;
   }
 
-  public async validateToken(id: number, rt: string): Promise<UserDto> {
-    const user = await this.findOneById(id);
-
-    if (!user) throw new NotFoundException('User not found');
-
-    if (!user.hashedRt) throw new ForbiddenException('Token expired');
-
-    const rtMathes = await bcrypt.compare(rt, user.hashedRt);
-
-    if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
-
-    return user;
-  }
-
-  public async updateToken(id: number, rt: string | null): Promise<boolean> {
-    const user = await this.userRepo.findOne({ where: { id } });
-
-    if (!user) throw new NotFoundException();
-
-    let newRt: string | null = null;
-
-    if (rt) {
-      newRt = await bcrypt.hash(rt, 10);
-    }
-
-    await this.userRepo.update(id, { ...user, hashedRt: newRt });
-
-    return true;
-  }
-
 }
