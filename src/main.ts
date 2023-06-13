@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { version, name, description } from 'package.json';
 import { AppModule } from './modules/app/app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 import type { IAppConfig } from './config/interfaces';
 
@@ -19,8 +19,14 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
+  app.useGlobalPipes(
+    new ValidationPipe(),
+  );
+
+  // * for postman debuging
+  // should be replaced with localhost:3000 in final version
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
   });
@@ -28,7 +34,7 @@ async function bootstrap(): Promise<void> {
   const port = configService.get('port', { infer: true });
 
   await app.listen(port, () => {
-    Logger.log('listening on port ' + port);
+    Logger.log('Listening on port ' + port);
   });
 }
 bootstrap();
