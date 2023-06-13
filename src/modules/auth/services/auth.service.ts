@@ -1,6 +1,4 @@
-import {
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -28,7 +26,7 @@ export class AuthService {
   }
 
   public async signup(dto: CreateUserDto): Promise<Tokens> {
-    const newUser = await this.usersService.create(dto);
+    const newUser = await this.usersService.createUser(dto);
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
     this.updateToken(newUser.id, tokens.refresh_token);
@@ -36,11 +34,11 @@ export class AuthService {
     return tokens;
   }
 
-  public async logout(id : number): Promise<void> {
+  public async logout(id: number): Promise<void> {
     await this.usersService.updateToken(id, null);
   }
 
-  public async refresh(id : number, rt:string): Promise<Tokens> {
+  public async refresh(id: number, rt: string): Promise<Tokens> {
     const user = await this.usersService.validateToken(id, rt);
 
     const tokens = await this.getTokens(user.id, user.email);

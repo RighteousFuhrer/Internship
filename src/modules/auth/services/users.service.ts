@@ -1,12 +1,17 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { User } from '../entities/user.entity';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 
-import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { AuthDto } from '../dtos/auth.dto';
+import type { CreateUserDto } from '../dtos/createUser.dto';
+import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
 
 @Injectable()
@@ -36,13 +41,35 @@ export class UsersService {
     return user;
   }
 
-  public async create(createUserDto: CreateUserDto): Promise<UserDto> {
+  public async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const user = await this.userRepo.create(createUserDto);
 
     return this.userRepo.save(user);
   }
+  public async updateUser(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDto> {
+    const updRes = await this.userRepo.update(id, updateUserDto);
 
-  public async validateUser(dto: AuthDto) : Promise<UserDto> {
+    if (!updRes.affected) throw new BadRequestException('Failed to update');
+
+    const user = await this.userRepo.findOne({ where: { id } });
+
+    if(!user) throw new NotFoundException('User not found');
+
+    return user;
+  }
+
+  public async deleteUser(
+    id: number,
+  ): Promise<void> {
+    const delRes = await this.userRepo.delete(id);
+
+    if (!delRes.affected) throw new BadRequestException('Failed to delete');
+  }
+
+  public async validateUser(dto: AuthDto): Promise<UserDto> {
     const user = await this.findOneByEmail(dto.email);
 
     if (!user) {
@@ -58,29 +85,29 @@ export class UsersService {
     return user;
   }
 
-  public async validateToken(id:number, rt:string) : Promise<UserDto> {
+  public async validateToken(id: number, rt: string): Promise<UserDto> {
     const user = await this.findOneById(id);
 
-    if(!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
-    if(!user.hashedRt) throw new ForbiddenException('Token expired');
+    if (!user.hashedRt) throw new ForbiddenException('Token expired');
 
     const rtMathes = await bcrypt.compare(rt, user.hashedRt);
 
-    if(!rtMathes) throw new ForbiddenException('Invalid refresh token');
+    if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
 
     return user;
   }
 
-  public async updateToken(id: number, rt: string | null ): Promise<boolean> {
+  public async updateToken(id: number, rt: string | null): Promise<boolean> {
     const user = await this.userRepo.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException();
 
-    let newRt : string | null = null;
+    let newRt: string | null = null;
 
-    if(rt) {
-      newRt = await bcrypt.hash(rt,10);
+    if (rt) {
+      newRt = await bcrypt.hash(rt, 10);
     }
 
     await this.userRepo.update(id, { ...user, hashedRt: newRt });
