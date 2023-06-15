@@ -10,12 +10,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from '../services/users.service';
-
-import { JwtAtGuard } from 'src/common/guards/jwt-at.guard';
-import type { UserDto } from '../dtos/user.dto';
-import { RequestWithToken } from '../types/tokens.type';
 import { UpdateUserDto } from '../dtos/update.user.dto';
+import { UsersService } from '../utils/UsersService';
+import { JwtAtGuard } from '../../../common/guards/jwt-at.guard';
+import type { UserDto } from '../dtos/user.dto';
+import { RequestWithToken } from '../../auth/types/tokens.type';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +25,7 @@ export class UsersController {
   @Get('')
   @HttpCode(HttpStatus.OK)
   public async findOne(@Param() req: RequestWithToken): Promise<UserDto> {
-    const user = await this.usersService.findOneById(Number(req.user.sub));
+    const user = await this.usersService.findOneById(Number((Number(req.user.sub))));
     if (!user) {
       throw new NotFoundException();
     }

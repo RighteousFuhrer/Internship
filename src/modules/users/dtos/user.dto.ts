@@ -1,4 +1,11 @@
-import { IsEmail, IsNumber, IsBase64, IsAlpha, IsString, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsNumber,
+  IsBase64,
+  IsAlpha,
+  IsString,
+  IsOptional,
+} from 'class-validator';
 
 export class UserDto {
 

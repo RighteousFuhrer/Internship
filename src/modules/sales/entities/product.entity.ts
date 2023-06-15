@@ -1,5 +1,3 @@
-import { Product_list } from './product_list.entity';
-import { Category } from './category.entity';
 import {
   Column,
   Entity,
@@ -7,6 +5,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Category } from './category.entity';
+import { Product_list } from './product_list.entity';
 
 @Entity()
 export class Product {

@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { CategoriesController } from './categories.controller';
-import { CategoriesService } from './categories.service';
+import { CategoriesService } from '../controllers/categories.controller';
 
 import type { TestingModule } from '@nestjs/testing';
 
