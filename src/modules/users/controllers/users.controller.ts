@@ -10,7 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dtos/update.user.dto';
-import { UsersService } from '../utils/UsersService';
+import { UsersService } from '../interfaces/UsersService';
 
 import type { UserDto } from '../dtos/user.dto';
 
