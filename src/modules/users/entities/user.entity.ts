@@ -1,6 +1,12 @@
-import { Cart } from '../../sale/entities/cart.entity';
-import { BeforeInsert, Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Cart } from '../../sales/entities/cart.entity';
 
 @Entity()
 export class User {
@@ -23,15 +29,15 @@ export class User {
   @Column({ type: 'bytea', nullable: true })
   public image!: Buffer;
 
-  @Column({ type:'text', nullable: true })
+  @Column({ type: 'text', nullable: true })
   public hashedRt!: string | null;
 
   @OneToOne(() => Cart, (cart) => cart.user)
-  public cart!: Cart;
+  public cart?: Cart;
 
   @BeforeInsert()
-  public async hashPassword() : Promise<void> {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
+  public hashPassword = async (): Promise<void> => {
+      this.password = await bcrypt.hash(this.password, 10);
+    };
 
 }

@@ -9,8 +9,8 @@ import {
   Param,
   Put,
 } from '@nestjs/common';
-import { UsersService } from '../services/users.service';
 import { UpdateUserDto } from '../dtos/update.user.dto';
+import { UsersService } from '../utils/UsersService';
 
 import type { UserDto } from '../dtos/user.dto';
 
@@ -23,6 +23,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   public async findOne(@Param() id: number): Promise<UserDto> {
     const user = await this.usersService.findOneById(Number(id));
+
     if (!user) {
       throw new NotFoundException();
     }
@@ -34,14 +35,14 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   public async update(
     @Body() dto: UpdateUserDto,
-    @Param() id:number,
+    @Param() id: number,
   ): Promise<UserDto> {
     return await this.usersService.updateUser(id, dto);
   }
 
   @Delete('')
   @HttpCode(HttpStatus.OK)
-  public async delete(@Param() id : number): Promise<void> {
+  public async delete(@Param() id: number): Promise<void> {
     await this.usersService.deleteUser(id);
   }
 

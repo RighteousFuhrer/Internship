@@ -1,4 +1,3 @@
-
 export interface IAppConfig extends IServerConfig {
   database: IDbConfig;
 }

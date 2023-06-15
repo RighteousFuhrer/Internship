@@ -1,6 +1,6 @@
-import { IsBase64, IsEmail,  MaxLength, MinLength } from 'class-validator';
+import { IsBase64, IsEmail, MaxLength, MinLength } from 'class-validator';
 
-export class UpdateUserDto {
+export class CreateUserDto {
 
   @IsEmail()
   public email!: string;
@@ -16,6 +16,6 @@ export class UpdateUserDto {
   public last_name!: string;
 
   @IsBase64({})
-  public image!: Buffer ;
+  public image!: Buffer;
 
 }
