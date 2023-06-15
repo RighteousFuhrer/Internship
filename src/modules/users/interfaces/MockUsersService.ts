@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { defaultUser } from './DefaultUser';
+import { defaultUser } from '../utils/DefaultUser';
 
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';

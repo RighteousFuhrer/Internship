@@ -11,10 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dtos/update.user.dto';
-import { UsersService } from '../utils/UsersService';
+import { UsersService } from '../interfaces/UsersService';
 import { JwtAtGuard } from '../../../common/guards/jwt-at.guard';
-import type { UserDto } from '../dtos/user.dto';
 import { RequestWithToken } from '../../auth/types/tokens.type';
+
+
+import type { UserDto } from '../dtos/user.dto';
 
 @Controller('users')
 export class UsersController {

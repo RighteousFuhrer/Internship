@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
-import { UsersService } from './utils/UsersService';
+import { UsersService } from './interfaces/UsersService';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],

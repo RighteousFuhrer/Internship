@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { defaultUser } from '../utils/DefaultUser';
-import { MockUsersService } from '../utils/MockUsersService';
-import { UsersService } from '../utils/UsersService';
+import { MockUsersService } from '../interfaces/MockUsersService';
+import { UsersService } from '../interfaces/UsersService';
 import { UsersController } from './users.controller';
 
 import type { TestingModule } from '@nestjs/testing';
