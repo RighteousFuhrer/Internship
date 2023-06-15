@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { defaultUser } from './DefaultUser';
+import { defaultUser } from '../utils/DefaultUser';
 
 import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { User } from '../entities/user.entity';
@@ -13,10 +13,10 @@ type FindSchema = {
 
 type UpdateResult = {
   affected?: number;
-}
+};
 
 @Injectable()
-export class MockUsersRepository  {
+export class MockUsersRepository {
 
   private _user: User;
 
@@ -25,7 +25,6 @@ export class MockUsersRepository  {
   }
 
   public async findOne({ where }: FindSchema): Promise<User | null> {
-
     if (where.id === this._user.id || where.email === this._user.email) {
       return await this._user;
     }
