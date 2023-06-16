@@ -5,11 +5,11 @@ import { version, name, description } from 'package.json';
 import { AppModule } from './modules/app/app.module';
 import { Logger } from '@nestjs/common';
 
-import type { IServerConfig } from './config/interfaces';
+import type { IAppConfig } from './config/interfaces';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get<ConfigService<IServerConfig, true>>(ConfigService);
+  const configService = app.get<ConfigService<IAppConfig, true>>(ConfigService);
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle(name)

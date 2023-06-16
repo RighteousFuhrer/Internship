@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
-import type { IServerConfig } from './interfaces';
 import Joi from 'joi';
+
+import type { IServerConfig } from './interfaces';
 
 export default registerAs('app', (): IServerConfig => {
   const values = {
