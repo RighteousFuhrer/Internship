@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/interfaces/UsersService';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../../users/interfaces/UsersService';
 
-import type { AuthDto } from '../dtos/auth.dto';
 import type { CreateUserDto } from '../../users/dtos/createUser.dto';
+import type { AuthDto } from '../dtos/auth.dto';
+import type { AuthService } from '../interfaces/AuthService';
 import type { Tokens } from '../types/tokens.type';
 
 @Injectable()
-export class AuthService {
+export class AuthServiceImpl implements AuthService {
 
   constructor(
     private usersService: UsersService,

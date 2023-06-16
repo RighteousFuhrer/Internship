@@ -10,24 +10,25 @@ import { UsersService } from '../users/interfaces/UsersService';
 import { UsersServiceImpl } from '../users/services/users.service';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
+import { AuthServiceImpl } from './services/auth.service';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { AuthService } from './interfaces/AuthService';
 
 @Module({
   imports: [
+    UsersModule,
     PassportModule,
     JwtModule.register({}),
-    UsersModule,
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController, UsersController],
   providers: [
     ConfigService,
+    JwtRtGuard,
     JwtRefreshStrategy,
     JwtAccessStrategy,
-    JwtRtGuard,
-    AuthService,
+    { provide: AuthService, useClass: AuthServiceImpl },
     { provide: UsersService, useClass: UsersServiceImpl },
   ],
 })

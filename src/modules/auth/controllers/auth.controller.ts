@@ -11,12 +11,12 @@ import { JwtAtGuard } from 'src/common/guards/jwt-at.guard';
 import { JwtRtGuard } from '../../../common/guards/jwt-rt.guard';
 import { CreateUserDto } from '../../users/dtos/createUser.dto';
 import { AuthDto } from '../dtos/auth.dto';
-import { AuthService } from '../services/auth.service';
 import {
   RequestWithRefreshToken,
   RequestWithToken,
 } from '../types/tokens.type';
 
+import { AuthService } from '../interfaces/AuthService';
 import type { Tokens } from '../types/tokens.type';
 
 @Controller('auth')
