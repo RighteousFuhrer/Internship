@@ -7,7 +7,7 @@ import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
 import { defaultUser } from '../utils/DefaultUser';
-import { MockUsersRepository } from '../interfaces/MockUsersRepository';
+import { mockUsersRepository } from '../interfaces/MockusersRepository';
 import { UsersService } from '../interfaces/UsersService';
 import { UsersServiceImpl } from './users.service';
 
@@ -18,7 +18,7 @@ describe('UsersService', () => {
     const module = await Test.createTestingModule({
       providers: [
         { provide: UsersService, useClass: UsersServiceImpl },
-        { provide: UserRepository, useClass: MockUsersRepository },
+        { provide: UserRepository, useValue: mockUsersRepository },
       ],
     }).compile();
 

@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { defaultUser } from '../utils/DefaultUser';
 
 import type { CreateUserDto } from '../dtos/createUser.dto';
@@ -15,40 +14,33 @@ type UpdateResult = {
   affected?: number;
 };
 
-@Injectable()
-export class MockUsersRepository {
+export const mockUsersRepository = {
 
-  private _user: User;
-
-  constructor() {
-    this._user = defaultUser;
-  }
-
-  public async findOne({ where }: FindSchema): Promise<User | null> {
-    if (where.id === this._user.id || where.email === this._user.email) {
-      return await this._user;
+  findOne: jest.fn(async ({ where }: FindSchema): Promise<User | null> => {
+    if (where.id === defaultUser.id || where.email === defaultUser.email) {
+      return await defaultUser;
     }
 
     return null;
-  }
+  }),
 
-  public async create(dto: CreateUserDto): Promise<User> {
+  create: jest.fn(async (dto: CreateUserDto): Promise<User> => {
     return await {
-      ...this._user,
+      ...defaultUser,
       ...dto,
       id: 2,
     };
-  }
+  }),
 
-  public async save(user: User): Promise<User> {
+  save: jest.fn(async (user: User): Promise<User> => {
     return await user;
-  }
+  }),
 
-  public async delete(id: number): Promise<UpdateResult> {
-    if (id !== this._user.id) {
+  delete: jest.fn(async (id: number): Promise<UpdateResult> => {
+    if (id !== defaultUser.id) {
       return await { affected: 0 };
     }
     return await { affected: 1 };
-  }
+  }),
 
-}
+};
