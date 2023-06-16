@@ -15,7 +15,6 @@ import { UsersService } from '../interfaces/UsersService';
 import { JwtAtGuard } from '../../../common/guards/jwt-at.guard';
 import { RequestWithToken } from '../../auth/types/tokens.type';
 
-
 import type { UserDto } from '../dtos/user.dto';
 
 @Controller('users')

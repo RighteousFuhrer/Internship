@@ -9,15 +9,15 @@ import {
 } from '@nestjs/common';
 import { JwtAtGuard } from 'src/common/guards/jwt-at.guard';
 import { JwtRtGuard } from '../../../common/guards/jwt-rt.guard';
-import { AuthDto } from '../../auth/dtos/auth.dto';
-import { AuthService } from '../../auth/services/auth.service';
+import { CreateUserDto } from '../../users/dtos/createUser.dto';
+import { AuthDto } from '../dtos/auth.dto';
+import { AuthService } from '../services/auth.service';
 import {
   RequestWithRefreshToken,
   RequestWithToken,
-} from '../../auth/types/tokens.type';
-import { CreateUserDto } from '../dtos/createUser.dto';
+} from '../types/tokens.type';
 
-import type { Tokens } from '../../auth/types/tokens.type';
+import type { Tokens } from '../types/tokens.type';
 
 @Controller('auth')
 export class AuthController {
