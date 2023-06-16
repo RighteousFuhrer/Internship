@@ -21,7 +21,7 @@ export class AuthServiceImpl implements AuthService {
     const user = await this.usersService.validateUser(dto);
 
     const tokens = await this._getTokens(user.id, user.email);
-    this.updateToken(user.id, tokens.refresh_token);
+    this.usersService.updateToken(user.id, tokens.refresh_token);
 
     return tokens;
   }
@@ -30,29 +30,25 @@ export class AuthServiceImpl implements AuthService {
     const newUser = await this.usersService.createUser(dto);
 
     const tokens = await this._getTokens(newUser.id, newUser.email);
-    this.updateToken(newUser.id, tokens.refresh_token);
+    this.usersService.updateToken(newUser.id, tokens.refresh_token);
 
     return tokens;
   }
 
-  public async logout(id: number): Promise<void> {
+  public async logout(id: string): Promise<void> {
     await this.usersService.updateToken(id, null);
   }
 
-  public async refresh(id: number, rt: string): Promise<Tokens> {
+  public async refresh(id: string, rt: string): Promise<Tokens> {
     const user = await this.usersService.validateToken(id, rt);
 
     const tokens = await this._getTokens(user.id, user.email);
-    this.updateToken(user.id, tokens.refresh_token);
+    this.usersService.updateToken(user.id, tokens.refresh_token);
 
     return tokens;
   }
 
-  public async updateToken(id: number, rt: string): Promise<void> {
-    await this.usersService.updateToken(id, rt);
-  }
-
-  private async _getTokens(id: number, email: string): Promise<Tokens> {
+  private async _getTokens(id: string, email: string): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         { sub: id, email },

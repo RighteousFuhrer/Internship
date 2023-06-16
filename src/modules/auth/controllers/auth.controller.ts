@@ -24,28 +24,28 @@ export class AuthController {
   @Post('/signin')
   @HttpCode(HttpStatus.CREATED)
   public async signin(@Body() dto: AuthDto): Promise<Tokens> {
-    return await this.authService.signin(dto);
+    return this.authService.signin(dto);
   }
 
   @Post('signup')
   @HttpCode(HttpStatus.OK)
   public async signup(@Body() dto: CreateUserDto): Promise<Tokens> {
-    return await this.authService.signup(dto);
+    return this.authService.signup(dto);
   }
 
   @UseGuards(JwtAtGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   public async logout(@User('sub') sub: string): Promise<void> {
-    await this.authService.logout(Number(sub));
+    await this.authService.logout(sub);
   }
 
   @UseGuards(JwtRtGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   public async refresh(@User() user:JwtPayload): Promise<Tokens> {
-    return await this.authService.refresh(
-      Number(user.sub),
+    return this.authService.refresh(
+      user.sub,
       user?.refreshToken as string,
     );
   }

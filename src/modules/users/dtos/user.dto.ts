@@ -1,16 +1,16 @@
 import {
   IsEmail,
-  IsNumber,
   IsBase64,
   IsAlpha,
   IsString,
   IsOptional,
+  IsUUID,
 } from 'class-validator';
 
 export class UserDto {
 
-  @IsNumber()
-  public id!: number;
+  @IsUUID()
+  public id!: string;
 
   @IsEmail()
   public email!: string;

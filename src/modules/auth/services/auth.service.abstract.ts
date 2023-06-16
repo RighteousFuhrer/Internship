@@ -11,10 +11,8 @@ export abstract class AuthService {
 
   public abstract signup(dto: CreateUserDto): Promise<Tokens>;
 
-  public abstract logout(id: number): Promise<void>;
+  public abstract logout(id: string): Promise<void>;
 
-  public abstract refresh(id: number, rt: string): Promise<Tokens>
-
-  public abstract updateToken(id: number, rt: string): Promise<void>
+  public abstract refresh(id: string, rt: string): Promise<Tokens>
 
 }

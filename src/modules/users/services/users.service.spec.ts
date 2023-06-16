@@ -36,7 +36,8 @@ describe('UsersService', () => {
   });
 
   it('should return a user', () => {
-    expect(service.findOneById(1)).resolves.toEqual(defaultUser);
+    const id = '1';
+    expect(service.findOneById(id)).resolves.toEqual(defaultUser);
   });
 
   it('should create a user', () => {
@@ -55,7 +56,7 @@ describe('UsersService', () => {
   });
 
   it('should update a user', () => {
-    const id = 1;
+    const id = '1';
     const dto = {
       email: 'example@mail.com',
       password: bcrypt.hashSync('password', 10),
@@ -70,7 +71,7 @@ describe('UsersService', () => {
   });
 
   it('should delete a user', () => {
-    const id = 1;
+    const id = '1';
     expect(service.deleteUser(id)).resolves.toEqual(undefined);
   });
 
@@ -89,12 +90,15 @@ describe('UsersService', () => {
   });
 
   it('should return an exception', () => {
-    expect(service.findOneById(3)).rejects.toEqual(
+    const id = '3';
+
+    expect(service.findOneById(id)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
 
   it('should throw an exception', (): void => {
+    const id = '2';
     const dto = {
       email: 'example@mail.com',
       password: bcrypt.hashSync('password', 10),
@@ -102,14 +106,14 @@ describe('UsersService', () => {
       last_name: 'Doe',
       image: Buffer.from('', 'base64'),
     };
-    const id = 2;
     expect(service.updateUser(id, dto)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
 
   it('should throw an exception', (): void => {
-    const id = 2;
+    const id = '2';
+
     expect(service.deleteUser(id)).rejects.toEqual(
       new BadRequestException('Failed to delete'),
     );

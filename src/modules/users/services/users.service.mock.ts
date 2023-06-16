@@ -15,7 +15,7 @@ import type { User } from '../entities/user.entity';
 
 export class UsersServiceMock implements UsersService {
 
-  public async findOneById(id: number): Promise<User> {
+  public async findOneById(id: string): Promise<User> {
     if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     return await defaultUser;
@@ -32,13 +32,13 @@ export class UsersServiceMock implements UsersService {
     return await { ...defaultUser, ...createUserDto };
   }
 
-  public async updateUser(id: number, dto: UpdateUserDto): Promise<User> {
+  public async updateUser(id: string, dto: UpdateUserDto): Promise<User> {
     if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     return await { ...defaultUser, ...dto };
   }
 
-  public async deleteUser(id: number): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     if (id !== defaultUser.id) {
       throw await new BadRequestException('Failed to delete');
     }
@@ -61,7 +61,7 @@ export class UsersServiceMock implements UsersService {
     return defaultUser;
   }
 
-  public async validateToken(id: number, rt: string): Promise<UserDto> {
+  public async validateToken(id: string, rt: string): Promise<UserDto> {
     if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     if (!defaultUser.hashedRt) throw new ForbiddenException('Token expired');
@@ -73,7 +73,7 @@ export class UsersServiceMock implements UsersService {
     return defaultUser;
   }
 
-  public async updateToken(id: number, rt: string | null): Promise<boolean> {
+  public async updateToken(id: string, rt: string | null): Promise<boolean> {
     if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     if (rt) return await true;

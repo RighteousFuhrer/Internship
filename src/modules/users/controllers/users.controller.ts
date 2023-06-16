@@ -25,7 +25,7 @@ export class UsersController {
   @Get('')
   @HttpCode(HttpStatus.OK)
   public async findOne(@User('sub') sub: string): Promise<UserDto> {
-    const user = await this.usersService.findOneById(Number(sub));
+    const user = await this.usersService.findOneById(sub);
 
     if (!user) {
       throw new NotFoundException();
@@ -41,14 +41,14 @@ export class UsersController {
     @User('sub') sub: string,
     @Body() dto: UpdateUserDto,
   ): Promise<UserDto> {
-    return await this.usersService.updateUser(Number(sub), dto);
+    return this.usersService.updateUser(sub, dto);
   }
 
   @UseGuards(JwtAtGuard)
   @Delete('')
   @HttpCode(HttpStatus.OK)
   public async delete(@User('sub') sub: string): Promise<void> {
-    await this.usersService.deleteUser(Number(sub));
+    await this.usersService.deleteUser(sub);
   }
 
 }

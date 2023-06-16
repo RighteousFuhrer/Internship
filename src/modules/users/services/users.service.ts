@@ -31,7 +31,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async findOneById(id: number): Promise<User> {
+  public async findOneById(id: string): Promise<User> {
     const user = await this._userRepo.findOne({
       where: {
         id,
@@ -49,7 +49,7 @@ export class UsersServiceImpl implements UsersService {
     return this._userRepo.save(user);
   }
   public async updateUser(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
     const user = await this._userRepo.findOne({ where: { id } });
@@ -63,7 +63,7 @@ export class UsersServiceImpl implements UsersService {
     return updatedUser;
   }
 
-  public async deleteUser(id: number): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     const delRes = await this._userRepo.delete(id);
 
     if (!delRes.affected) throw new BadRequestException('Failed to delete');
@@ -85,7 +85,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async validateToken(id: number, rt: string): Promise<UserDto> {
+  public async validateToken(id: string, rt: string): Promise<UserDto> {
     const user = await this.findOneById(id);
 
     if (!user) throw new NotFoundException('User not found');
@@ -99,7 +99,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async updateToken(id: number, rt: string | null): Promise<boolean> {
+  public async updateToken(id: string, rt: string | null): Promise<boolean> {
     const user = await this._userRepo.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException('User not found');
