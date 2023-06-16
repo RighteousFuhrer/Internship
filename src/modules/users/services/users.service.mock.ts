@@ -9,11 +9,11 @@ import { defaultUser } from '../utils/DefaultUser';
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
 import type { CreateUserDto } from '../dtos/createUser.dto';
-import type { UsersService } from './UsersService';
+import type { UsersService } from './users.service.abstract';
 import type { AuthDto } from '../../auth/dtos/auth.dto';
 import type { User } from '../entities/user.entity';
 
-export class MockUsersService implements UsersService {
+export class UsersServiceMock implements UsersService {
 
   public async findOneById(id: number): Promise<User> {
     if (id !== defaultUser.id) throw new NotFoundException('User not found');
@@ -62,8 +62,7 @@ export class MockUsersService implements UsersService {
   }
 
   public async validateToken(id: number, rt: string): Promise<UserDto> {
-
-    if(id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     if (!defaultUser.hashedRt) throw new ForbiddenException('Token expired');
 
@@ -72,17 +71,14 @@ export class MockUsersService implements UsersService {
     if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
 
     return defaultUser;
-
   }
 
   public async updateToken(id: number, rt: string | null): Promise<boolean> {
-
-    if(id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== defaultUser.id) throw new NotFoundException('User not found');
 
     if (rt) return await true;
 
     return await false;
-
   }
 
 }

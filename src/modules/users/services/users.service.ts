@@ -12,7 +12,7 @@ import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
 import type { User } from '../entities/user.entity';
-import type { UsersService } from '../interfaces/UsersService';
+import type { UsersService } from './users.service.abstract';
 
 @Injectable()
 export class UsersServiceImpl implements UsersService {

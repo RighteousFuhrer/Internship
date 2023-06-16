@@ -7,8 +7,8 @@ import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
 import { defaultUser } from '../utils/DefaultUser';
-import { mockUsersRepository } from '../interfaces/MockusersRepository';
-import { UsersService } from '../interfaces/UsersService';
+import { mockUsersRepository } from '../repositories/user.repository.mock';
+import { UsersService } from './users.service.abstract';
 import { UsersServiceImpl } from './users.service';
 
 describe('UsersService', () => {

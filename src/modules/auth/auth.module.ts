@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
-import { UsersService } from '../users/interfaces/UsersService';
+import { UsersService } from '../users/services/users.service.abstract';
 import { UsersServiceImpl } from '../users/services/users.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -9,11 +9,14 @@ import { User } from '../users/entities/user.entity';
 import { AuthController } from './controllers/auth.controller';
 import { UsersController } from '../users/controllers/users.controller';
 import { ConfigService } from '@nestjs/config';
-import { JwtRtGuard } from 'src/common/guards/jwt-rt.guard';
+import { JwtRtGuard } from '../../framework/guards/jwt-rt.guard';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
-import { AuthService } from './interfaces/AuthService';
+import { AuthService } from './services/auth.service.abstract';
 import { AuthServiceImpl } from './services/auth.service';
+
+const authService = { provide: AuthService, useClass: AuthServiceImpl };
+const userService = { provide: UsersService, useClass: UsersServiceImpl };
 
 @Module({
   imports: [
@@ -24,12 +27,12 @@ import { AuthServiceImpl } from './services/auth.service';
   ],
   controllers: [AuthController, UsersController],
   providers: [
+    authService,
+    userService,
     ConfigService,
     JwtRtGuard,
     JwtRefreshStrategy,
     JwtAccessStrategy,
-    { provide: AuthService, useClass: AuthServiceImpl },
-    { provide: UsersService, useClass: UsersServiceImpl },
   ],
 })
 export class AuthModule {}

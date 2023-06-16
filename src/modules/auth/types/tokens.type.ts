@@ -6,22 +6,11 @@ export type Tokens = {
 export type JwtPayload = {
   sub: string;
   email: string;
+  refreshToken?: string ;
 };
 
-export type JwtRefreshPayload = {
-  sub: string;
-  email: string;
-  refreshToken: string ;
-};
-
-// Type of request with access token
 export type RequestWithToken = {
   user: JwtPayload;
   [key: string]: string | object;
 };
 
-// Type of request with refresh token
-export type RequestWithRefreshToken = {
-  user: JwtRefreshPayload;
-  [key: string]: string | object;
-};

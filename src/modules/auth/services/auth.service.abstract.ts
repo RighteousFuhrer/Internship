@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { CreateUserDto } from 'src/modules/users/dtos/createUser.dto';
+import type { CreateUserDto } from '../../../modules/users/dtos/createUser.dto';
 import type { AuthDto } from '../dtos/auth.dto';
 import type { Tokens } from '../types/tokens.type';
 
@@ -16,7 +16,5 @@ export abstract class AuthService {
   public abstract refresh(id: number, rt: string): Promise<Tokens>
 
   public abstract updateToken(id: number, rt: string): Promise<void>
-
-  public abstract getTokens(id: number, email: string): Promise<Tokens>
 
 }

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../users/interfaces/UsersService';
+import { UsersService } from '../../users/services/users.service.abstract';
 
 import type { CreateUserDto } from '../../users/dtos/createUser.dto';
 import type { AuthDto } from '../dtos/auth.dto';
-import type { AuthService } from '../interfaces/AuthService';
+import type { AuthService } from './auth.service.abstract';
 import type { Tokens } from '../types/tokens.type';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AuthServiceImpl implements AuthService {
   public async signin(dto: AuthDto): Promise<Tokens> {
     const user = await this.usersService.validateUser(dto);
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this._getTokens(user.id, user.email);
     this.updateToken(user.id, tokens.refresh_token);
 
     return tokens;
@@ -29,7 +29,7 @@ export class AuthServiceImpl implements AuthService {
   public async signup(dto: CreateUserDto): Promise<Tokens> {
     const newUser = await this.usersService.createUser(dto);
 
-    const tokens = await this.getTokens(newUser.id, newUser.email);
+    const tokens = await this._getTokens(newUser.id, newUser.email);
     this.updateToken(newUser.id, tokens.refresh_token);
 
     return tokens;
@@ -42,7 +42,7 @@ export class AuthServiceImpl implements AuthService {
   public async refresh(id: number, rt: string): Promise<Tokens> {
     const user = await this.usersService.validateToken(id, rt);
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this._getTokens(user.id, user.email);
     this.updateToken(user.id, tokens.refresh_token);
 
     return tokens;
@@ -52,7 +52,7 @@ export class AuthServiceImpl implements AuthService {
     await this.usersService.updateToken(id, rt);
   }
 
-  public async getTokens(id: number, email: string): Promise<Tokens> {
+  private async _getTokens(id: number, email: string): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         { sub: id, email },
