@@ -61,4 +61,28 @@ export class MockUsersService implements UsersService {
     return defaultUser;
   }
 
+  public async validateToken(id: number, rt: string): Promise<UserDto> {
+
+    if(id !== defaultUser.id) throw new NotFoundException('User not found');
+
+    if (!defaultUser.hashedRt) throw new ForbiddenException('Token expired');
+
+    const rtMathes = await bcrypt.compare(rt, defaultUser.hashedRt);
+
+    if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
+
+    return defaultUser;
+
+  }
+
+  public async updateToken(id: number, rt: string | null): Promise<boolean> {
+
+    if(id !== defaultUser.id) throw new NotFoundException('User not found');
+
+    if (rt) return await true;
+
+    return await false;
+
+  }
+
 }

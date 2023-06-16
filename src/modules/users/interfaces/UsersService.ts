@@ -24,4 +24,8 @@ export abstract class UsersService {
 
   public abstract validateUser(dto: AuthDto): Promise<UserDto>;
 
+  public abstract validateToken(id: number, rt: string): Promise<UserDto>;
+
+  public abstract updateToken(id: number, rt: string | null): Promise<boolean>;
+
 }

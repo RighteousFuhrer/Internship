@@ -85,4 +85,38 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
+  public async validateToken(id: number, rt: string): Promise<UserDto> {
+    const user = await this.findOneById(id);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    if (!user.hashedRt) throw new ForbiddenException('Token expired');
+
+    const rtMathes = await bcrypt.compare(rt, user.hashedRt);
+
+    if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
+
+    return user;
+  }
+
+  public async updateToken(id: number, rt: string | null): Promise<boolean> {
+    const user = await this._userRepo.findOne({ where: { id } });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    let newRt: string | null = null;
+
+    if (rt) {
+      newRt = await bcrypt.hash(rt, 10);
+      if (rt) {
+        newRt = await bcrypt.hash(rt, 10);
+      }
+
+      await this._userRepo.save({ ...user, hashedRt: newRt });
+      return true;
+    }
+
+    return false;
+  }
+
 }
