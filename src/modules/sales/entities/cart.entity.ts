@@ -11,8 +11,8 @@ import { Product_list } from './product_list.entity';
 @Entity()
 export class Cart {
 
-  @PrimaryGeneratedColumn()
-  public id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id!: string;
 
   @OneToOne(() => User, (user) => user.cart, { onDelete: 'CASCADE' })
   @JoinColumn()

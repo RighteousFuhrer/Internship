@@ -11,8 +11,8 @@ import { Product_list } from './product_list.entity';
 @Entity()
 export class Product {
 
-  @PrimaryGeneratedColumn()
-  public id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id!: string;
 
   @Column({ unique: true, nullable: false })
   public name!: string;

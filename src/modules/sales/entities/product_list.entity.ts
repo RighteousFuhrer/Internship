@@ -5,8 +5,8 @@ import { Product } from './product.entity';
 @Entity()
 export class Product_list {
 
-  @PrimaryGeneratedColumn()
-  public id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id!: string;
 
   @Column({ nullable: false, default: 1 })
   public quontity!: number;
