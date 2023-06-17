@@ -15,7 +15,9 @@ import { JwtAtGuard } from '../../../framework/guards/jwt-at.guard';
 import { User } from '../../../framework/decorators/user.decorator';
 
 import type { UserDto } from '../dtos/user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
 

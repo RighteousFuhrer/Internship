@@ -15,7 +15,9 @@ import { AuthService } from '../services/auth.service.abstract';
 import { JwtPayload } from '../types/tokens.type';
 
 import type { Tokens } from '../types/tokens.type';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 

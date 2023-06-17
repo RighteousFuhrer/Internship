@@ -55,7 +55,7 @@ export class UsersServiceImpl implements UsersService {
     const user = await this._userRepo.findOne({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
 
-    const updatedUser = await this._userRepo.save({
+    const updatedUser = this._userRepo.save({
       ...user,
       ...updateUserDto,
     });

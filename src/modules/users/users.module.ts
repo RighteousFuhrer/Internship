@@ -7,17 +7,19 @@ import { User } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { UsersService } from './services/users.service.abstract';
 
+const userService = { provide: UsersService, useClass: UsersServiceImpl };
+
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [
+    userService,
     ConfigService,
     UserRepository,
-    { provide: UsersService, useClass: UsersServiceImpl },
   ],
   exports: [
+    userService,
     UserRepository,
-    { provide: UsersService, useClass: UsersServiceImpl },
   ],
 })
 export class UsersModule {}

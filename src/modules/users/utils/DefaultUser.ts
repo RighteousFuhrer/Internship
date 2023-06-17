@@ -9,6 +9,6 @@ export const defaultUser: User = {
   last_name: 'Doe',
   password: bcrypt.hashSync('password', 10),
   image: Buffer.from('', 'base64'),
-  hashedRt: '',
+  hashedRt: bcrypt.hashSync('---valid_token---', 10),
   hashPassword: (): Promise<void> => Promise.resolve(),
 };
