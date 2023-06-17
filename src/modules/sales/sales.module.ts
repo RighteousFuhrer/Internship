@@ -7,6 +7,9 @@ import { CategoriesServiceImpl } from './services/categories.service';
 import { CategoriesService } from './services/categories.service.abstract';
 import { ProductsService } from './services/products.service.abstract';
 import { ProductsServiceImpl } from './services/products.service';
+import { ProductRepository } from './repositories/product.repository';
+import { CategoryRepository } from './repositories/category.repository';
+import { ProductsController } from './controllers/products.controller';
 
 const categoriesService = {
   provide: CategoriesService,
@@ -19,7 +22,12 @@ const productService = {
 
 @Module({
   imports: [TypeOrmModule.forFeature([Category, Product])],
-  controllers: [CategoriesController],
-  providers: [categoriesService, productService],
+  controllers: [CategoriesController, ProductsController],
+  providers: [
+    productService,
+    categoriesService,
+    ProductRepository,
+    CategoryRepository,
+  ],
 })
 export class SalesModule {}

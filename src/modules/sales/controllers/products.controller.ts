@@ -1,30 +1,40 @@
-import { Body, Controller, Param, Post, Delete, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCategoryDto } from '../dtos/CreateCategory.dto';
-import { CategoriesServiceImpl } from '../services/categories.service';
+import { ProductsService } from '../services/products.service.abstract';
+import { CreateProductDto } from '../dtos/createProduct.dto';
 
-import type { CategoryDto } from '../dtos/category.dto';
+import type { Product } from '../entities/product.entity';
 
 @ApiTags('Products')
 @Controller('products')
-export class CategoriesController {
+export class ProductsController {
 
-  constructor(private readonly _categoriesService: CategoriesServiceImpl) {}
+  constructor(private readonly _productsService: ProductsService) {}
 
   @Get()
-  public async getAll(): Promise<CategoryDto[]> {
-    return this._categoriesService.findAll();
+  public async getAll(): Promise<Product[]> {
+    return this._productsService.findAll();
+  }
+
+  @Get(':categoryId')
+  public async getAllByCategory(@Param() categoryId: string): Promise<Product[]> {
+    return this._productsService.findAllByCategory(categoryId);
+  }
+
+  @Get(':id')
+  public async getOne(@Param() id: string): Promise<Product[]> {
+    return this._productsService.findOne(id);
   }
 
   @Post()
-  public async create(@Body() dto: CreateCategoryDto): Promise<CategoryDto> {
+  public async create(@Body() dto: CreateProductDto): Promise<Product> {
     dto;
-    return this._categoriesService.create(dto);
+    return this._productsService.create(dto);
   }
 
   @Delete()
   public async delete(@Param() id: string): Promise<void> {
-    await this._categoriesService.delete(id);
+    await this._productsService.delete(id);
   }
 
 }

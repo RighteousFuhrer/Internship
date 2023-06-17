@@ -20,7 +20,7 @@ export class ProductsServiceImpl implements ProductsService {
     return categories;
   }
 
-  public async findByCategory(id: string): Promise<Product[]> {
+  public async findAllByCategory(id: string): Promise<Product[]> {
     const categories = await this._productRepo.find({
       where: {
         category: {

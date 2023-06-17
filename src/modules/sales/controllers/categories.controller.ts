@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, Delete, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCategoryDto } from '../dtos/CreateCategory.dto';
-import { CategoriesServiceImpl } from '../services/categories.service';
+import { CategoriesService } from '../services/categories.service.abstract';
 
 import type { CategoryDto } from '../dtos/category.dto';
 
@@ -9,7 +9,7 @@ import type { CategoryDto } from '../dtos/category.dto';
 @Controller('categories')
 export class CategoriesController {
 
-  constructor(private readonly _categoriesService: CategoriesServiceImpl) {}
+  constructor(private readonly _categoriesService: CategoriesService) {}
 
   @Get()
   public async getAll(): Promise<CategoryDto[]> {
