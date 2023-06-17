@@ -6,23 +6,28 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
-  Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../dtos/update.user.dto';
-import { UsersService } from '../interfaces/UsersService';
+import { UsersService } from '../services/users.service.abstract';
+import { JwtAtGuard } from '../../../framework/guards/jwt-at.guard';
+import { User } from '../../../framework/decorators/user.decorator';
 
 import type { UserDto } from '../dtos/user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
 
   constructor(private usersService: UsersService) {}
 
+  @UseGuards(JwtAtGuard)
   @Get('')
   @HttpCode(HttpStatus.OK)
-  public async findOne(@Param() id: number): Promise<UserDto> {
-    const user = await this.usersService.findOneById(Number(id));
+  public async findOne(@User('sub') sub: string): Promise<UserDto> {
+    const user = await this.usersService.findOneById(sub);
 
     if (!user) {
       throw new NotFoundException();
@@ -31,19 +36,21 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(JwtAtGuard)
   @Put('')
   @HttpCode(HttpStatus.OK)
   public async update(
+    @User('sub') sub: string,
     @Body() dto: UpdateUserDto,
-    @Param() id: number,
   ): Promise<UserDto> {
-    return await this.usersService.updateUser(id, dto);
+    return this.usersService.updateUser(sub, dto);
   }
 
+  @UseGuards(JwtAtGuard)
   @Delete('')
   @HttpCode(HttpStatus.OK)
-  public async delete(@Param() id: number): Promise<void> {
-    await this.usersService.deleteUser(id);
+  public async delete(@User('sub') sub: string): Promise<void> {
+    await this.usersService.deleteUser(sub);
   }
 
 }

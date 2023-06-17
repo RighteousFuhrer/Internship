@@ -5,7 +5,7 @@ import type { User } from '../entities/user.entity';
 
 type FindSchema = {
   where: {
-    id?: number;
+    id?: string;
     email?: string;
   };
 };
@@ -28,7 +28,7 @@ export const mockUsersRepository = {
     return await {
       ...defaultUser,
       ...dto,
-      id: 2,
+      id: '2',
     };
   }),
 
@@ -36,7 +36,7 @@ export const mockUsersRepository = {
     return await user;
   }),
 
-  delete: jest.fn(async (id: number): Promise<UpdateResult> => {
+  delete: jest.fn(async (id: string): Promise<UpdateResult> => {
     if (id !== defaultUser.id) {
       return await { affected: 0 };
     }
