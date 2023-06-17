@@ -7,8 +7,8 @@ import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
 import { defaultUser } from '../utils/DefaultUser';
-import { mockUsersRepository } from '../interfaces/MockusersRepository';
-import { UsersService } from '../interfaces/UsersService';
+import { mockUsersRepository } from '../repositories/user.repository.mock';
+import { UsersService } from './users.service.abstract';
 import { UsersServiceImpl } from './users.service';
 
 describe('UsersService', () => {
@@ -29,17 +29,18 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return a user', () => {
-    expect(service.findOneByEmail('example@mail.com')).resolves.toEqual(
+  it('should return a user', async () => {
+    expect(await service.findOneByEmail('example@mail.com')).toEqual(
       defaultUser,
     );
   });
 
-  it('should return a user', () => {
-    expect(service.findOneById(1)).resolves.toEqual(defaultUser);
+  it('should return a user', async () => {
+    const id = '1';
+    expect(await service.findOneById(id)).toEqual(defaultUser);
   });
 
-  it('should create a user', () => {
+  it('should create a user', async () => {
     const dto = {
       email: 'example@mail.com',
       password: bcrypt.hashSync('password', 10),
@@ -47,15 +48,15 @@ describe('UsersService', () => {
       last_name: 'Doe',
       image: Buffer.from('', 'base64'),
     };
-    expect(service.createUser(dto)).resolves.toEqual({
+    expect(await service.createUser(dto)).toEqual({
       ...defaultUser,
       ...dto,
-      id: 2,
+      id: '2',
     });
   });
 
-  it('should update a user', () => {
-    const id = 1;
+  it('should update a user', async () => {
+    const id = '1';
     const dto = {
       email: 'example@mail.com',
       password: bcrypt.hashSync('password', 10),
@@ -63,23 +64,30 @@ describe('UsersService', () => {
       last_name: 'Doe',
       image: Buffer.from('', 'base64'),
     };
-    expect(service.updateUser(id, dto)).resolves.toEqual({
+    expect(await service.updateUser(id, dto)).toEqual({
       ...defaultUser,
       ...dto,
     });
   });
 
-  it('should delete a user', () => {
-    const id = 1;
-    expect(service.deleteUser(id)).resolves.toEqual(undefined);
+  it('should delete a user', async () => {
+    const id = '1';
+    expect(await service.deleteUser(id)).toEqual(undefined);
   });
 
-  it('should validate a user', () => {
+  it('should return a validated user', async () => {
     const dto = {
       email: 'example@mail.com',
       password: 'password',
     };
-    expect(service.validateUser(dto)).resolves.toEqual(defaultUser);
+    expect(await service.validateUser(dto)).toEqual(defaultUser);
+  });
+
+  it('should return a user',async () => {
+    const id = '1';
+    const refreshToken = '---valid_token---';
+
+    expect(await service.validateToken(id, refreshToken)).toEqual(defaultUser);
   });
 
   it('should return an exception', () => {
@@ -89,12 +97,15 @@ describe('UsersService', () => {
   });
 
   it('should return an exception', () => {
-    expect(service.findOneById(3)).rejects.toEqual(
+    const id = '3';
+
+    expect(service.findOneById(id)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
 
   it('should throw an exception', (): void => {
+    const id = '2';
     const dto = {
       email: 'example@mail.com',
       password: bcrypt.hashSync('password', 10),
@@ -102,14 +113,14 @@ describe('UsersService', () => {
       last_name: 'Doe',
       image: Buffer.from('', 'base64'),
     };
-    const id = 2;
     expect(service.updateUser(id, dto)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
 
   it('should throw an exception', (): void => {
-    const id = 2;
+    const id = '2';
+
     expect(service.deleteUser(id)).rejects.toEqual(
       new BadRequestException('Failed to delete'),
     );
@@ -134,4 +145,29 @@ describe('UsersService', () => {
       new ForbiddenException('Invalid password'),
     );
   });
+
+  it('should throw an exception', (): void => {
+    const dto = {
+      email: 'example@mail.com',
+      password: 'passwo',
+    };
+    expect(service.validateUser(dto)).rejects.toEqual(
+      new ForbiddenException('Invalid password'),
+    );
+  });
+
+  it('should throw an exception', (): void => {
+    const id = '2';
+    const token = '---valid_token---';
+    expect(service.validateToken(id, token)).rejects.toEqual(
+      new NotFoundException('User not found'));
+  });
+
+  it('should throw an exception', (): void => {
+    const id = '1';
+    const token = '---invalid_token---';
+    expect(service.validateToken(id, token)).rejects.toEqual(
+      new ForbiddenException('Invalid refresh token'));
+  });
+
 });
