@@ -11,17 +11,21 @@ export abstract class UsersService {
 
   public abstract findOneByEmail (email: string): Promise<User>;
 
-  public abstract findOneById(id: number): Promise<User>;
+  public abstract findOneById(id: string): Promise<User>;
 
   public abstract createUser(createUserDto: CreateUserDto): Promise<UserDto>;
 
   public abstract updateUser(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserDto>;
 
-  public abstract deleteUser(id: number): Promise<void>;
+  public abstract deleteUser(id: string): Promise<void>;
 
   public abstract validateUser(dto: AuthDto): Promise<UserDto>;
+
+  public abstract validateToken(id: string, rt: string): Promise<UserDto>;
+
+  public abstract updateToken(id: string, rt: string | null): Promise<boolean>;
 
 }

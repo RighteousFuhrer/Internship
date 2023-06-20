@@ -12,7 +12,7 @@ import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
 import type { User } from '../entities/user.entity';
-import type { UsersService } from '../interfaces/UsersService';
+import type { UsersService } from './users.service.abstract';
 
 @Injectable()
 export class UsersServiceImpl implements UsersService {
@@ -31,7 +31,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async findOneById(id: number): Promise<User> {
+  public async findOneById(id: string): Promise<User> {
     const user = await this._userRepo.findOne({
       where: {
         id,
@@ -49,7 +49,7 @@ export class UsersServiceImpl implements UsersService {
     return this._userRepo.save(user);
   }
   public async updateUser(
-    id: number,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
     const user = await this._userRepo.findOne({ where: { id } });
@@ -63,7 +63,7 @@ export class UsersServiceImpl implements UsersService {
     return updatedUser;
   }
 
-  public async deleteUser(id: number): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     const delRes = await this._userRepo.delete(id);
 
     if (!delRes.affected) throw new BadRequestException('Failed to delete');
@@ -83,6 +83,40 @@ export class UsersServiceImpl implements UsersService {
     }
 
     return user;
+  }
+
+  public async validateToken(id: string, rt: string): Promise<UserDto> {
+    const user = await this.findOneById(id);
+
+    if (!user) throw new NotFoundException('User not found');
+
+    if (!user.hashedRt) throw new ForbiddenException('Token expired');
+
+    const rtMathes = await bcrypt.compare(rt, user.hashedRt);
+
+    if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
+
+    return user;
+  }
+
+  public async updateToken(id: string, rt: string | null): Promise<boolean> {
+    const user = await this._userRepo.findOne({ where: { id } });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    let newRt: string | null = null;
+
+    if (rt) {
+      newRt = await bcrypt.hash(rt, 10);
+      if (rt) {
+        newRt = await bcrypt.hash(rt, 10);
+      }
+
+      await this._userRepo.save({ ...user, hashedRt: newRt });
+      return true;
+    }
+
+    return false;
   }
 
 }
