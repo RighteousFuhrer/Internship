@@ -6,9 +6,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import appConfig from '../../../config/app.config';
 import { UsersService } from '../../users/services/users.service.abstract';
 import { UsersServiceMock } from '../../users/services/users.service.mock';
+import { NotFoundException } from '@nestjs/common';
 
 import type { TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;

@@ -6,16 +6,16 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { User } from '../../../framework/decorators/user.decorator';
 import { JwtAtGuard } from '../../../framework/guards/jwt-at.guard';
 import { JwtRtGuard } from '../../../framework/guards/jwt-rt.guard';
 import { CreateUserDto } from '../../users/dtos/createUser.dto';
 import { AuthDto } from '../dtos/auth.dto';
-import { User } from '../../../framework/decorators/user.decorator';
 import { AuthService } from '../services/auth.service.abstract';
 import { JwtPayload } from '../types/tokens.type';
 
 import type { Tokens } from '../types/tokens.type';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
