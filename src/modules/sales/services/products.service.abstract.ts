@@ -6,9 +6,11 @@ import type { Product } from '../entities/product.entity';
 @Injectable()
 export abstract class ProductsService {
 
-  public abstract findOne(id: string): Promise<Product[]>;
+  public abstract findOne(id: string): Promise<Product>;
 
   public abstract findAllByCategory(id: string): Promise<Product[]>;
+
+  public abstract searchByName(name: string): Promise<Product[]>;
 
   public abstract findAll(): Promise<Product[]>;
 

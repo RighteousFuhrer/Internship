@@ -1,27 +1,29 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { ProductRepository } from '../repositories/product.repository';
 
 import type { CreateProductDto } from '../dtos/createProduct.dto';
-import type { ProductsService } from './products.service.abstract';
 import type { Product } from '../entities/product.entity';
+import type { ProductsService } from './products.service.abstract';
 
 @Injectable()
 export class ProductsServiceImpl implements ProductsService {
 
   constructor(private readonly _productRepo: ProductRepository) {}
 
-  public async findOne(id: string): Promise<Product[]> {
-    const categories = await this._productRepo.find({
+  public async findOne(id: string): Promise<Product> {
+    const products = await this._productRepo.findOne({
       where: {
         id: id,
       },
     });
 
-    return categories;
+    if(!products ) throw new NotFoundException('Product not found');
+
+    return products;
   }
 
   public async findAllByCategory(id: string): Promise<Product[]> {
-    const categories = await this._productRepo.find({
+    const products = await this._productRepo.find({
       where: {
         category: {
           id: id,
@@ -29,19 +31,33 @@ export class ProductsServiceImpl implements ProductsService {
       },
     });
 
-    return categories;
+    if(!products || !products.length) throw new NotFoundException('Products not found');
+
+    return products;
   }
 
   public async findAll(): Promise<Product[]> {
-    const categories = await this._productRepo.find();
+    const products = await this._productRepo.find();
 
-    return categories;
+    if(!products || !products.length) throw new NotFoundException('Products not found');
+
+    return products;
+  }
+
+  public async searchByName(name: string): Promise<Product[]> {
+    const products = await this._productRepo.searchByName(name);
+
+    if(!products || !products.length) throw new NotFoundException('Products not found');
+
+    return products;
   }
 
   public async create(dto:  CreateProductDto): Promise<Product> {
-    const category = await this._productRepo.create(dto);
+    const product = await this._productRepo.createProduct(dto);
 
-    return category;
+    if(!product) throw new UnprocessableEntityException('Failed to create product');
+
+    return product;
   }
 
   public async delete(id: string): Promise<void> {

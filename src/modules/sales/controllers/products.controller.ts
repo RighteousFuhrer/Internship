@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ProductsService } from '../services/products.service.abstract';
 import { CreateProductDto } from '../dtos/createProduct.dto';
 
@@ -16,14 +16,39 @@ export class ProductsController {
     return this._productsService.findAll();
   }
 
-  @Get(':categoryId')
-  public async getAllByCategory(@Param() categoryId: string): Promise<Product[]> {
-    return this._productsService.findAllByCategory(categoryId);
+  @ApiParam({
+    name: 'categoryId',
+    type: 'string',
+    description: 'Id of product`s category',
+    required: true,
+  })
+  @Get('/:categoryId')
+  public async getAllByCategory(
+    @Param() params: { categoryId: string },
+  ): Promise<Product[]> {
+    return this._productsService.findAllByCategory(params.categoryId);
   }
 
-  @Get(':id')
-  public async getOne(@Param() id: string): Promise<Product[]> {
-    return this._productsService.findOne(id);
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of product',
+    required: true,
+  })
+  @Get('/:id')
+  public async getOne(@Param() params: { id: string }): Promise<Product> {
+    return this._productsService.findOne(params.id);
+  }
+
+  @ApiParam({
+    name: 'name',
+    type: 'string',
+    description: 'Query form searchin product by name',
+    required: true,
+  })
+  @Get('search/:name')
+  public async searchByName(@Param() params: { name: string }): Promise<Product[]> {
+    return this._productsService.searchByName(params.name);
   }
 
   @Post()
@@ -32,9 +57,15 @@ export class ProductsController {
     return this._productsService.create(dto);
   }
 
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'Id of product to be deleted',
+    required: true,
+  })
   @Delete()
-  public async delete(@Param() id: string): Promise<void> {
-    await this._productsService.delete(id);
+  public async delete(@Param()  params: { id: string } ): Promise<void> {
+    await this._productsService.delete(params.id);
   }
 
 }

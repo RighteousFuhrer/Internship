@@ -14,6 +14,10 @@ export class CreateProductDto {
   public price!: number;
 
   @ApiProperty()
+  @IsNumber()
+  public total_sold?: number;
+
+  @ApiProperty()
   @IsBase64({})
   public image!: Buffer;
 

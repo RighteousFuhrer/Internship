@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Cart } from './cart.entity';
-import { Product } from './product.entity';
+import { Product } from '../../sales/entities/product.entity';
 
 @Entity()
 export class Product_list {
@@ -12,9 +12,9 @@ export class Product_list {
   public quontity!: number;
 
   @ManyToOne(() => Product, (product) => product.product_lists)
-  public product!: Product;
+  public product!: Product | null;
 
   @ManyToOne(() => Cart, (cart) => cart.product_lists, { onDelete: 'CASCADE' })
-  public cart!: Cart;
+  public cart!: Cart | null;
 
 }

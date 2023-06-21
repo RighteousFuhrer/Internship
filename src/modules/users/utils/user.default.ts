@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 
 import type { User } from '../entities/user.entity';
 
-export const defaultUser: User = {
+export const userDefault: User = {
   id: '1',
   email: 'example@mail.com',
   first_name: 'John',
