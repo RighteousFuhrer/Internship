@@ -1,12 +1,12 @@
 import { Test } from '@nestjs/testing';
-import { CategoryRepository } from '../repositories/category.repository';
-import { categoryRepositoryMock } from '../repositories/category.repository.mock';
+import { CategoryRepository } from '../../repositories/category.repository';
+import { categoryRepositoryMock } from '../../repositories/category.repository.mock';
 import { CategoriesServiceImpl } from './categories.service';
 import { CategoriesService } from './categories.service.abstract';
-import { categoryDefault } from '../utils/category.default';
+import { categoryDefault } from '../../utils/category.default';
 import { BadRequestException } from '@nestjs/common';
 
-import type { CreateCategoryDto } from '../dtos/CreateCategory.dto';
+import type { CreateCategoryDto } from '../../dtos/CreateCategory.dto';
 
 describe('CategoriesService', () => {
   let service: CategoriesService;

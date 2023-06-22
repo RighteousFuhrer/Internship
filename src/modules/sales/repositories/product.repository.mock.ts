@@ -1,21 +1,9 @@
-import { productDefault } from '../utils/product.default';
 import { NotFoundException } from '@nestjs/common';
+import { productDefault } from '../utils/product.default';
 
-import type { Product } from '../entities/product.entity';
 import type { CreateProductDto } from '../dtos/createProduct.dto';
-
-type UpdateResult = {
-  affected: number;
-};
-
-type FindParams = {
-  where?: {
-    id?: string;
-    category?: {
-      id?: string;
-    };
-  };
-};
+import type { Product } from '../entities/product.entity';
+import type { FindParams, UpdateResult } from '../types';
 
 export const productRepositoryMock = {
   find: jest.fn(async (params?: FindParams): Promise<Product[]> => {
@@ -45,8 +33,12 @@ export const productRepositoryMock = {
 
     return await [productDefault];
   }),
-  createProduct: jest.fn(async (dto: CreateProductDto): Promise<Product> => {
+  create: jest.fn(async (dto: CreateProductDto): Promise<Product> => {
     return await { ...productDefault, ...dto };
+  }),
+
+  save: jest.fn(async (product: Product): Promise<Product> => {
+    return await product;
   }),
 
   delete: jest.fn(async ({ id }: { id: string }): Promise<UpdateResult> => {

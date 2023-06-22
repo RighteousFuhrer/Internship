@@ -1,12 +1,14 @@
 import { Test } from '@nestjs/testing';
-import { ProductRepository } from '../repositories/product.repository';
-import { productRepositoryMock } from '../repositories/product.repository.mock';
+import { ProductRepository } from '../../repositories/product.repository';
+import { productRepositoryMock } from '../../repositories/product.repository.mock';
 import { ProductsServiceImpl } from './products.service';
 import { ProductsService } from './products.service.abstract';
-import { productDefault } from '../utils/product.default';
+import { productDefault } from '../../utils/product.default';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { CategoryRepository } from '../../repositories/category.repository';
+import { categoryRepositoryMock } from '../../repositories/category.repository.mock';
 
-import type { CreateProductDto } from '../dtos/createProduct.dto';
+import type { CreateProductDto } from '../../dtos/createProduct.dto';
 
 describe('CategoriesService', () => {
   let service: ProductsService;
@@ -16,6 +18,7 @@ describe('CategoriesService', () => {
       providers: [
         { provide: ProductsService, useClass: ProductsServiceImpl },
         { provide: ProductRepository, useValue: productRepositoryMock },
+        { provide: CategoryRepository, useValue: categoryRepositoryMock },
       ],
     }).compile();
 

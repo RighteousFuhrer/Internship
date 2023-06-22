@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { CategoryRepository } from '../repositories/category.repository';
+import { CategoryRepository } from '../../repositories/category.repository';
 
-import type { CreateCategoryDto } from '../dtos/CreateCategory.dto';
-import type { Category } from '../entities/category.entity';
+import type { CreateCategoryDto } from '../../dtos/CreateCategory.dto';
+import type { Category } from '../../entities/category.entity';
 import type { CategoriesService } from './categories.service.abstract';
 
 @Injectable()

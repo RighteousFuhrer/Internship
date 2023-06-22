@@ -1,6 +1,7 @@
-import { Category } from 'src/modules/sales/entities/category.entity';
 
-import type { CreateCategoryDto } from 'src/modules/sales/dtos/CreateCategory.dto';
+import { Category } from '../modules/sales/entities/category.entity';
+
+import type { CreateCategoryDto } from '../modules/sales/dtos/CreateCategory.dto';
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CategoriesSeed1687340457890 implements MigrationInterface {
@@ -75,11 +76,9 @@ export class CategoriesSeed1687340457890 implements MigrationInterface {
       },
     ];
 
-    for (let i = 0; i < categories.length; i++) {
-      await queryRunner.manager.save(
-        queryRunner.manager.create<Category>(Category, categories[i]),
-      );
-    }
+    await queryRunner.manager.save(
+      queryRunner.manager.create<Category>(Category, categories[0]),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

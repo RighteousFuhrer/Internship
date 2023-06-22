@@ -1,7 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { ProductsService } from '../services/products.service.abstract';
+import { ProductsService } from '../services/products/products.service.abstract';
 import { CreateProductDto } from '../dtos/createProduct.dto';
+import { SearchByNameDto } from '../dtos/searchByName.dto';
+import { SearchByIdDto } from '../dtos/serachById.dto';
+import { SearchByCategoryIdDto } from '../dtos/searchByCategoryId.dto';
 
 import type { Product } from '../entities/product.entity';
 
@@ -24,7 +27,7 @@ export class ProductsController {
   })
   @Get('/:categoryId')
   public async getAllByCategory(
-    @Param() params: { categoryId: string },
+    @Param() params: SearchByCategoryIdDto,
   ): Promise<Product[]> {
     return this._productsService.findAllByCategory(params.categoryId);
   }
@@ -36,7 +39,7 @@ export class ProductsController {
     required: true,
   })
   @Get('/:id')
-  public async getOne(@Param() params: { id: string }): Promise<Product> {
+  public async getOne(@Param() params: SearchByIdDto): Promise<Product> {
     return this._productsService.findOne(params.id);
   }
 
@@ -47,7 +50,7 @@ export class ProductsController {
     required: true,
   })
   @Get('search/:name')
-  public async searchByName(@Param() params: { name: string }): Promise<Product[]> {
+  public async searchByName(@Param() params: SearchByNameDto): Promise<Product[]> {
     return this._productsService.searchByName(params.name);
   }
 
@@ -64,7 +67,7 @@ export class ProductsController {
     required: true,
   })
   @Delete()
-  public async delete(@Param()  params: { id: string } ): Promise<void> {
+  public async delete(@Param()  params: SearchByIdDto): Promise<void> {
     await this._productsService.delete(params.id);
   }
 

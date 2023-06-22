@@ -1,8 +1,8 @@
-import { Product } from 'src/modules/sales/entities/product.entity';
+import { Product } from '../modules/sales/entities/product.entity';
+import { Category } from '../modules/sales/entities/category.entity';
 
-import type { CreateProductDto } from 'src/modules/sales/dtos/createProduct.dto';
+import type { CreateProductDto } from '../modules/sales/dtos/createProduct.dto';
 import type { MigrationInterface, QueryRunner } from 'typeorm';
-import { Category } from 'src/modules/sales/entities/category.entity';
 
 export class ProductSeed1687346982483 implements MigrationInterface {
 

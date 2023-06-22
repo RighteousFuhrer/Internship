@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateCategoryDto } from '../dtos/CreateCategory.dto';
-import { CategoriesService } from '../services/categories.service.abstract';
+import { CategoriesService } from '../services/categories/categories.service.abstract';
+import { SearchByIdDto } from '../dtos/serachById.dto';
 
 import type { CategoryDto } from '../dtos/category.dto';
 
@@ -29,7 +30,7 @@ export class CategoriesController {
     required: true,
   })
   @Delete()
-  public async delete(@Param()  params: { id: string } ): Promise<void> {
+  public async delete(@Param() params: SearchByIdDto ): Promise<void> {
     await this._categoriesService.delete(params.id);
   }
 

@@ -1,6 +1,6 @@
 import { User } from '../modules/users/entities/user.entity';
 
-import type { CreateUserDto } from 'src/modules/users/dtos/createUser.dto';
+import type { CreateUserDto } from '../modules/users/dtos/createUser.dto';
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class UserSeed1687337434218 implements MigrationInterface {
