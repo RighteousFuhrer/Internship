@@ -53,6 +53,7 @@ describe('CategoriesService', () => {
 
     expect(service.create(dto)).rejects.toEqual(new UnprocessableEntityException('Failed to create category'));
   });
+
   it('should throw an error', () => {
     const id = '2';
 
