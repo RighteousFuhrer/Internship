@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
-import { Product_list } from '../../cart/entities/product_list.entity';
+import { Product_list } from './product_list.entity';
 
 @Entity()
 export class Product {

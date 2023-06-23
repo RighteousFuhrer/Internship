@@ -19,10 +19,8 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  // * for postman debuging
-  // should be replaced with localhost:3000 in final version
   app.enableCors({
-    origin: '*',
+    origin: 'localhost:3000',
     methods: ['GET', 'POST', 'PUT'],
     credentials: true,
   });

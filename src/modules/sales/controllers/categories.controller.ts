@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateCategoryDto } from '../dtos/CreateCategory.dto';
-import { CategoriesService } from '../services/categories/categories.service.abstract';
 import { SearchByIdDto } from '../dtos/serachById.dto';
+import { CategoriesService } from '../services/categories/categories.service.abstract';
 
-import type { CategoryDto } from '../dtos/category.dto';
+import type { Category } from '../entities/category.entity';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -13,12 +13,12 @@ export class CategoriesController {
   constructor(private readonly _categoriesService: CategoriesService) {}
 
   @Get()
-  public async getAll(): Promise<CategoryDto[]> {
+  public async getAll(): Promise<Category[]> {
     return this._categoriesService.findAll();
   }
 
   @Post()
-  public async create(@Body() dto: CreateCategoryDto): Promise<CategoryDto> {
+  public async create(@Body() dto: CreateCategoryDto): Promise<Category> {
     dto;
     return this._categoriesService.create(dto);
   }
