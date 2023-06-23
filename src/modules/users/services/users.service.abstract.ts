@@ -13,7 +13,7 @@ export abstract class UsersService {
 
   public abstract findOneById(id: string): Promise<User>;
 
-  public abstract createUser(createUserDto: CreateUserDto): Promise<UserDto>;
+  public abstract createUser(createUserDto: CreateUserDto): Promise<User>;
 
   public abstract updateUser(
     id: string,

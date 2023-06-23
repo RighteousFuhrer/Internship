@@ -15,7 +15,8 @@ export const categoryRepositoryMock = {
 
     return await categoryDefault;
   }),
-  save: jest.fn(async (dto: CreateCategoryDto): Promise<Category> => {
+  save: jest.fn(async (dto: CreateCategoryDto): Promise<Category | null> => {
+    if(!dto.name) return null;
     return await { ...categoryDefault, ...dto };
   }),
 

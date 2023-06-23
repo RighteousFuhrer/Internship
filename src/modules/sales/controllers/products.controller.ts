@@ -2,9 +2,8 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ProductsService } from '../services/products/products.service.abstract';
 import { CreateProductDto } from '../dtos/createProduct.dto';
-import { SearchByNameDto } from '../dtos/searchByName.dto';
 import { SearchByIdDto } from '../dtos/serachById.dto';
-import { SearchByCategoryIdDto } from '../dtos/searchByCategoryId.dto';
+import { ProductSearchParams } from '../dtos/searchByCategoryId.dto';
 
 import type { Product } from '../entities/product.entity';
 
@@ -14,22 +13,23 @@ export class ProductsController {
 
   constructor(private readonly _productsService: ProductsService) {}
 
-  @Get()
-  public async getAll(): Promise<Product[]> {
-    return this._productsService.findAll();
-  }
-
   @ApiParam({
     name: 'categoryId',
     type: 'string',
     description: 'Id of product`s category',
-    required: true,
+    required: false,
   })
-  @Get('/:categoryId')
-  public async getAllByCategory(
-    @Param() params: SearchByCategoryIdDto,
+  @ApiParam({
+    name: 'name',
+    type: 'string',
+    description: 'Product name',
+    required: false,
+  })
+  @Get('/')
+  public async getAll(
+    @Param() params: ProductSearchParams,
   ): Promise<Product[]> {
-    return this._productsService.findAllByCategory(params.categoryId);
+    return this._productsService.findAll(params);
   }
 
   @ApiParam({
@@ -41,17 +41,6 @@ export class ProductsController {
   @Get('/:id')
   public async getOne(@Param() params: SearchByIdDto): Promise<Product> {
     return this._productsService.findOne(params.id);
-  }
-
-  @ApiParam({
-    name: 'name',
-    type: 'string',
-    description: 'Query form searchin product by name',
-    required: true,
-  })
-  @Get('search/:name')
-  public async searchByName(@Param() params: SearchByNameDto): Promise<Product[]> {
-    return this._productsService.searchByName(params.name);
   }
 
   @Post()
@@ -67,7 +56,7 @@ export class ProductsController {
     required: true,
   })
   @Delete()
-  public async delete(@Param()  params: SearchByIdDto): Promise<void> {
+  public async delete(@Param() params: SearchByIdDto): Promise<void> {
     await this._productsService.delete(params.id);
   }
 

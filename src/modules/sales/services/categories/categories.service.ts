@@ -19,7 +19,6 @@ export class CategoriesServiceImpl implements CategoriesService {
   }
 
   public async create(dto: CreateCategoryDto): Promise<Category> {
-
     const category = await this._categoryRepo.save(dto);
 
     if(!category) throw new UnprocessableEntityException('Failed to create category');

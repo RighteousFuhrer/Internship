@@ -4,10 +4,11 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { ProductRepository } from '../../repositories/product.repository';
 import { CategoryRepository } from '../../repositories/category.repository';
+import { ProductRepository } from '../../repositories/product.repository';
 
 import type { CreateProductDto } from '../../dtos/createProduct.dto';
+import type { ProductSearchParams } from '../../dtos/searchByCategoryId.dto';
 import type { Product } from '../../entities/product.entity';
 import type { ProductsService } from './products.service.abstract';
 
@@ -31,33 +32,22 @@ export class ProductsServiceImpl implements ProductsService {
     return products;
   }
 
-  public async findAllByCategory(id: string): Promise<Product[]> {
-    const products = await this._productRepo.find({
-      where: {
-        category: {
-          id: id,
+  public async findAll(params?: ProductSearchParams): Promise<Product[]> {
+    let products: Product[] = [];
+
+    if (params && params.categoryId) {
+      products = await this._productRepo.find({
+        where: {
+          category: {
+            id: params.categoryId,
+          },
         },
-      },
-    });
-
-    if (!products || !products.length)
-      throw new NotFoundException('Products not found');
-
-    return products;
-  }
-
-  public async findAll(): Promise<Product[]> {
-    const products = await this._productRepo.find();
-
-    if (!products || !products.length)
-      throw new NotFoundException('Products not found');
-
-    return products;
-  }
-
-  public async searchByName(name: string): Promise<Product[]> {
-    const products = await this._productRepo.searchByName(name);
-
+      });
+    } else if(params && params.name) {
+      products = await this._productRepo.searchByName(params.name);
+    } else {
+      products = await this._productRepo.find();
+    }
     if (!products || !products.length)
       throw new NotFoundException('Products not found');
 
@@ -78,7 +68,7 @@ export class ProductsServiceImpl implements ProductsService {
     const productModel = this._productRepo.create(dto);
     productModel.category = category;
 
-    const product = this._productRepo.save(productModel);
+    const product = await this._productRepo.save(productModel);
 
     if (!product)
       throw new UnprocessableEntityException('Failed to create product');

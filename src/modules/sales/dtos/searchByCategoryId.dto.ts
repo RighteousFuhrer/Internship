@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
-export class SearchByCategoryIdDto {
+export class ProductSearchParams {
 
   @ApiProperty()
   @IsUUID()
-  public categoryId!: string;
+  public categoryId?: string;
+
+  @ApiProperty()
+  @IsString()
+  public name?: string;
 
 }

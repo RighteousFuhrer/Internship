@@ -43,7 +43,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = await this._userRepo.create(createUserDto);
 
     return this._userRepo.save(user);
@@ -70,7 +70,7 @@ export class UsersServiceImpl implements UsersService {
   }
 
   public async validateUser(dto: AuthDto): Promise<UserDto> {
-    const user = await this.findOneByEmail(dto.email);
+    const user = await this._userRepo.findOne({ where: { email: dto.email } });
 
     if (!user) {
       throw new NotFoundException('Email not found');

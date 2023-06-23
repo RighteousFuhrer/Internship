@@ -4,7 +4,7 @@ import { productRepositoryMock } from '../../repositories/product.repository.moc
 import { ProductsServiceImpl } from './products.service';
 import { ProductsService } from './products.service.abstract';
 import { productDefault } from '../../utils/product.default';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CategoryRepository } from '../../repositories/category.repository';
 import { categoryRepositoryMock } from '../../repositories/category.repository.mock';
 
@@ -29,26 +29,30 @@ describe('CategoriesService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return a category', async () => {
+  it('should return a product', async () => {
     const id = '1';
 
     expect(await service.findOne(id)).toEqual(productDefault);
   });
 
-  it('should return an array of categories', async () => {
-    const id = '1';
-
-    expect(await service.findAllByCategory(id)).toEqual([productDefault]);
-  });
-
-  it('should return an array of categories', async () => {
+  it('should return an array of products', async () => {
     expect(await service.findAll()).toEqual([productDefault]);
   });
 
-  it('should return an array of categories', async () => {
-    const name = 'Default';
+  it('should return an array of products', async () => {
+    const params = {
+      categoryId: '1',
+    };
 
-    expect(await service.searchByName(name)).toEqual([productDefault]);
+    expect(await service.findAll(params)).toEqual([productDefault]);
+  });
+
+  it('should return an array of products', async () => {
+    const params = {
+      name: 'Default',
+    };
+
+    expect(await service.findAll(params)).toEqual([productDefault]);
   });
 
   it('should return created category', async () => {
@@ -62,7 +66,7 @@ describe('CategoriesService', () => {
     expect(await service.create(dto)).toEqual({ ...productDefault, ...dto });
   });
 
-  it('should delete a category', () => {
+  it('should delete a product', () => {
     const id = '1';
 
     expect(service.delete(id)).resolves.toEqual(undefined);
@@ -71,19 +75,45 @@ describe('CategoriesService', () => {
   it('should throw an error', () => {
     const id = '2';
 
-    expect(service.findOne(id)).rejects.toEqual(new NotFoundException());
+    expect(service.findOne(id)).rejects.toEqual(new NotFoundException('Product not found'));
   });
 
   it('should throw an error', () => {
-    const id = '2';
+    const params = {
+      categoryId: '2',
+    };
 
-    expect(service.findAllByCategory(id)).rejects.toEqual(new NotFoundException('Products not found'));
+    expect(service.findAll(params)).rejects.toEqual(new NotFoundException('Products not found'));
   });
 
   it('should throw an error', () => {
-    const name = 'wrong';
+    const params = {
+      name: 'wrong',
+    };
 
-    expect(service.searchByName(name)).rejects.toEqual(new NotFoundException('Products not found'));
+    expect(service.findAll(params)).rejects.toEqual(new NotFoundException('Products not found'));
+  });
+
+  it('should throw an error', () => {
+    const dto: CreateProductDto = {
+      image: Buffer.from(''),
+      name: 'New Category',
+      categoryId: '6',
+      price: 100,
+    };
+
+    expect(service.create(dto)).rejects.toEqual(new NotFoundException());
+  });
+
+  it('should throw an error', () => {
+    const dto: CreateProductDto = {
+      image: Buffer.from(''),
+      name: '',
+      categoryId: '1',
+      price: 100,
+    };
+
+    expect(service.create(dto)).rejects.toEqual(new UnprocessableEntityException('Failed to create product'));
   });
 
   it('should throw an error', () => {

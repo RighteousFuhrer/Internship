@@ -4,7 +4,7 @@ import { categoryRepositoryMock } from '../../repositories/category.repository.m
 import { CategoriesServiceImpl } from './categories.service';
 import { CategoriesService } from './categories.service.abstract';
 import { categoryDefault } from '../../utils/category.default';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 
 import type { CreateCategoryDto } from '../../dtos/CreateCategory.dto';
 
@@ -45,6 +45,14 @@ describe('CategoriesService', () => {
     expect(service.delete(id)).resolves.toEqual(undefined);
   });
 
+  it('should throw an error', () => {
+    const dto: CreateCategoryDto = {
+      image: Buffer.from(''),
+      name: '',
+    };
+
+    expect(service.create(dto)).rejects.toEqual(new UnprocessableEntityException('Failed to create category'));
+  });
   it('should throw an error', () => {
     const id = '2';
 

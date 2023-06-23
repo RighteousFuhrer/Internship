@@ -28,7 +28,7 @@ export class UsersServiceMock implements UsersService {
     return await userDefault;
   }
 
-  public async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
     return await { ...userDefault, ...createUserDto };
   }
 

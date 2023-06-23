@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common';
 import { productDefault } from '../utils/product.default';
 
 import type { CreateProductDto } from '../dtos/createProduct.dto';
@@ -20,9 +19,9 @@ export const productRepositoryMock = {
 
     return await [];
   }),
-  findOne: jest.fn(async (params: FindParams): Promise<Product> => {
+  findOne: jest.fn(async (params: FindParams): Promise<Product | null> => {
     if (!params.where || !(params.where.id === productDefault.id)) {
-      throw new NotFoundException();
+      return null;
     }
     return await productDefault;
   }),
@@ -33,11 +32,12 @@ export const productRepositoryMock = {
 
     return await [productDefault];
   }),
-  create: jest.fn(async (dto: CreateProductDto): Promise<Product> => {
-    return await { ...productDefault, ...dto };
+  create: jest.fn( (dto: CreateProductDto): Product => {
+    return  { ...productDefault, ...dto };
   }),
 
-  save: jest.fn(async (product: Product): Promise<Product> => {
+  save: jest.fn(async (product: Product): Promise<Product| null> => {
+    if(!product.name) return null;
     return await product;
   }),
 

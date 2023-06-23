@@ -90,6 +90,20 @@ describe('UsersService', () => {
     expect(await service.validateToken(id, refreshToken)).toEqual(userDefault);
   });
 
+  it('should return true', async () => {
+    const id = '1';
+    const refreshToken = '---new_token---';
+
+    expect(await service.updateToken(id, refreshToken)).toEqual(true);
+  });
+
+  it('should return false', async () => {
+    const id = '1';
+    const refreshToken = null;
+
+    expect(await service.updateToken(id, refreshToken)).toEqual(false);
+  });
+
   it('should return an exception', () => {
     expect(service.findOneByEmail('')).rejects.toEqual(
       new NotFoundException('User not found'),
@@ -132,7 +146,7 @@ describe('UsersService', () => {
       password: 'password',
     };
     expect(service.validateUser(dto)).rejects.toEqual(
-      new NotFoundException('User not found'),
+      new NotFoundException('Email not found'),
     );
   });
 
@@ -169,6 +183,14 @@ describe('UsersService', () => {
     const token = '---invalid_token---';
     expect(service.validateToken(id, token)).rejects.toEqual(
       new ForbiddenException('Invalid refresh token'),
+    );
+  });
+
+  it('should throw an exception', (): void => {
+    const id = '3';
+    const token = '---invalid_token---';
+    expect(service.updateToken(id, token)).rejects.toEqual(
+      new NotFoundException('User not found'),
     );
   });
 });
