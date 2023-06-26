@@ -75,7 +75,7 @@ export class UsersServiceImpl implements UsersService {
       throw new NotFoundException('Email not found');
     }
 
-    const passwordsMatches = await bcrypt.compare(dto.password, user.password);
+    const passwordsMatches = bcrypt.compareSync(dto.password, user.password);
 
     if (!passwordsMatches) {
       throw new ForbiddenException('Invalid password');
@@ -85,13 +85,13 @@ export class UsersServiceImpl implements UsersService {
   }
 
   public async validateToken(id: string, rt: string): Promise<UserDto> {
-    const user = await this.findOneById(id);
+    const user = await this._userRepo.findOne({ where: { id } });
 
     if (!user) throw new NotFoundException('User not found');
 
     if (!user.hashedRt) throw new ForbiddenException('Token expired');
 
-    const rtMathes = await bcrypt.compare(rt, user.hashedRt);
+    const rtMathes = bcrypt.compareSync(rt, user.hashedRt);
 
     if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
 
@@ -106,9 +106,9 @@ export class UsersServiceImpl implements UsersService {
     let newRt: string | null = null;
 
     if (rt) {
-      newRt = await bcrypt.hash(rt, 10);
+      newRt =  bcrypt.hashSync(rt, 10);
       if (rt) {
-        newRt = await bcrypt.hash(rt, 10);
+        newRt =  bcrypt.hashSync(rt, 10);
       }
 
       await this._userRepo.save({ ...user, hashedRt: newRt });

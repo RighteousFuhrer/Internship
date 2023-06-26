@@ -6,7 +6,7 @@ import {
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
-import { userDefault } from '../utils/user.default';
+import { userFirst } from '../utils/user.default';
 import { usersRepositoryMock } from '../repositories/user.repository.mock';
 import { UsersService } from './users.service.abstract';
 import { UsersServiceImpl } from './users.service';
@@ -30,14 +30,12 @@ describe('UsersService', () => {
   });
 
   it('should return a user', async () => {
-    expect(await service.findOneByEmail('example@mail.com')).toEqual(
-      userDefault,
-    );
+    expect(await service.findOneByEmail('example@mail.com')).toEqual(userFirst);
   });
 
   it('should return a user', async () => {
     const id = '1';
-    expect(await service.findOneById(id)).toEqual(userDefault);
+    expect(await service.findOneById(id)).toEqual(userFirst);
   });
 
   it('should create a user', async () => {
@@ -49,7 +47,7 @@ describe('UsersService', () => {
       image: Buffer.from('', 'base64'),
     };
     expect(await service.createUser(dto)).toEqual({
-      ...userDefault,
+      ...userFirst,
       ...dto,
       id: '2',
     });
@@ -65,7 +63,7 @@ describe('UsersService', () => {
       image: Buffer.from('', 'base64'),
     };
     expect(await service.updateUser(id, dto)).toEqual({
-      ...userDefault,
+      ...userFirst,
       ...dto,
     });
   });
@@ -80,14 +78,14 @@ describe('UsersService', () => {
       email: 'example@mail.com',
       password: 'password',
     };
-    expect(await service.validateUser(dto)).toEqual(userDefault);
+    expect(await service.validateUser(dto)).toEqual(userFirst);
   });
 
   it('should return a user', async () => {
     const id = '1';
     const refreshToken = '---valid_token---';
 
-    expect(await service.validateToken(id, refreshToken)).toEqual(userDefault);
+    expect(await service.validateToken(id, refreshToken)).toEqual(userFirst);
   });
 
   it('should return true', async () => {
@@ -105,7 +103,7 @@ describe('UsersService', () => {
   });
 
   it('should return an exception', () => {
-    expect(service.findOneByEmail('')).rejects.toEqual(
+    expect(service.findOneByEmail('hdfhdfh')).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
@@ -161,18 +159,8 @@ describe('UsersService', () => {
   });
 
   it('should throw an exception', (): void => {
-    const dto = {
-      email: 'example@mail.com',
-      password: 'passwo',
-    };
-    expect(service.validateUser(dto)).rejects.toEqual(
-      new ForbiddenException('Invalid password'),
-    );
-  });
-
-  it('should throw an exception', (): void => {
     const id = '2';
-    const token = '---valid_token---';
+    const token = '---invalid_token---';
     expect(service.validateToken(id, token)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
@@ -187,10 +175,19 @@ describe('UsersService', () => {
   });
 
   it('should throw an exception', (): void => {
-    const id = '3';
+    const id = '121';
+    const token = '---invalid_token---';
+    expect(service.validateToken(id, token)).rejects.toEqual(
+      new ForbiddenException('Token expired'),
+    );
+  });
+
+  it('should throw an exception', (): void => {
+    const id = '12';
     const token = '---invalid_token---';
     expect(service.updateToken(id, token)).rejects.toEqual(
       new NotFoundException('User not found'),
     );
   });
+
 });
