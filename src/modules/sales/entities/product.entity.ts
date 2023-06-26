@@ -32,6 +32,6 @@ export class Product {
   @ManyToOne(() => Category, (category) => category.products, {
     onDelete: 'SET NULL',
   })
-  public category!: Category;
+  public category!: Category | null;
 
 }

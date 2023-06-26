@@ -6,8 +6,8 @@ import {
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../repositories/user.repository';
-import { defaultUser } from '../utils/DefaultUser';
-import { mockUsersRepository } from '../repositories/user.repository.mock';
+import { userDefault } from '../utils/user.default';
+import { usersRepositoryMock } from '../repositories/user.repository.mock';
 import { UsersService } from './users.service.abstract';
 import { UsersServiceImpl } from './users.service';
 
@@ -18,7 +18,7 @@ describe('UsersService', () => {
     const module = await Test.createTestingModule({
       providers: [
         { provide: UsersService, useClass: UsersServiceImpl },
-        { provide: UserRepository, useValue: mockUsersRepository },
+        { provide: UserRepository, useValue: usersRepositoryMock },
       ],
     }).compile();
 
@@ -31,13 +31,13 @@ describe('UsersService', () => {
 
   it('should return a user', async () => {
     expect(await service.findOneByEmail('example@mail.com')).toEqual(
-      defaultUser,
+      userDefault,
     );
   });
 
   it('should return a user', async () => {
     const id = '1';
-    expect(await service.findOneById(id)).toEqual(defaultUser);
+    expect(await service.findOneById(id)).toEqual(userDefault);
   });
 
   it('should create a user', async () => {
@@ -49,7 +49,7 @@ describe('UsersService', () => {
       image: Buffer.from('', 'base64'),
     };
     expect(await service.createUser(dto)).toEqual({
-      ...defaultUser,
+      ...userDefault,
       ...dto,
       id: '2',
     });
@@ -65,7 +65,7 @@ describe('UsersService', () => {
       image: Buffer.from('', 'base64'),
     };
     expect(await service.updateUser(id, dto)).toEqual({
-      ...defaultUser,
+      ...userDefault,
       ...dto,
     });
   });
@@ -80,14 +80,28 @@ describe('UsersService', () => {
       email: 'example@mail.com',
       password: 'password',
     };
-    expect(await service.validateUser(dto)).toEqual(defaultUser);
+    expect(await service.validateUser(dto)).toEqual(userDefault);
   });
 
-  it('should return a user',async () => {
+  it('should return a user', async () => {
     const id = '1';
     const refreshToken = '---valid_token---';
 
-    expect(await service.validateToken(id, refreshToken)).toEqual(defaultUser);
+    expect(await service.validateToken(id, refreshToken)).toEqual(userDefault);
+  });
+
+  it('should return true', async () => {
+    const id = '1';
+    const refreshToken = '---new_token---';
+
+    expect(await service.updateToken(id, refreshToken)).toEqual(true);
+  });
+
+  it('should return false', async () => {
+    const id = '1';
+    const refreshToken = null;
+
+    expect(await service.updateToken(id, refreshToken)).toEqual(false);
   });
 
   it('should return an exception', () => {
@@ -132,7 +146,7 @@ describe('UsersService', () => {
       password: 'password',
     };
     expect(service.validateUser(dto)).rejects.toEqual(
-      new NotFoundException('User not found'),
+      new NotFoundException('Email not found'),
     );
   });
 
@@ -160,14 +174,23 @@ describe('UsersService', () => {
     const id = '2';
     const token = '---valid_token---';
     expect(service.validateToken(id, token)).rejects.toEqual(
-      new NotFoundException('User not found'));
+      new NotFoundException('User not found'),
+    );
   });
 
   it('should throw an exception', (): void => {
     const id = '1';
     const token = '---invalid_token---';
     expect(service.validateToken(id, token)).rejects.toEqual(
-      new ForbiddenException('Invalid refresh token'));
+      new ForbiddenException('Invalid refresh token'),
+    );
   });
 
+  it('should throw an exception', (): void => {
+    const id = '3';
+    const token = '---invalid_token---';
+    expect(service.updateToken(id, token)).rejects.toEqual(
+      new NotFoundException('User not found'),
+    );
+  });
 });

@@ -11,7 +11,6 @@ import type { AuthDto } from '../../auth/dtos/auth.dto';
 import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
-import type { User } from '../entities/user.entity';
 import type { UsersService } from './users.service.abstract';
 
 @Injectable()
@@ -19,7 +18,7 @@ export class UsersServiceImpl implements UsersService {
 
   constructor(private readonly _userRepo: UserRepository) {}
 
-  public async findOneByEmail(email: string): Promise<User> {
+  public async findOneByEmail(email: string): Promise<UserDto> {
     const user = await this._userRepo.findOne({
       where: {
         email,
@@ -31,7 +30,7 @@ export class UsersServiceImpl implements UsersService {
     return user;
   }
 
-  public async findOneById(id: string): Promise<User> {
+  public async findOneById(id: string): Promise<UserDto> {
     const user = await this._userRepo.findOne({
       where: {
         id,
@@ -70,7 +69,7 @@ export class UsersServiceImpl implements UsersService {
   }
 
   public async validateUser(dto: AuthDto): Promise<UserDto> {
-    const user = await this.findOneByEmail(dto.email);
+    const user = await this._userRepo.findOne({ where: { email: dto.email } });
 
     if (!user) {
       throw new NotFoundException('Email not found');

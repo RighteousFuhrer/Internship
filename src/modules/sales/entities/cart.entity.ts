@@ -16,7 +16,7 @@ export class Cart {
 
   @OneToOne(() => User, (user) => user.cart, { onDelete: 'CASCADE' })
   @JoinColumn()
-  public user!: User;
+  public user!: User | null;
 
   @OneToMany(() => Product_list, (product_list) => product_list.cart)
   public product_lists!: Promise<Product_list[]>;

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { defaultUser } from '../utils/DefaultUser';
+import { userDefault } from '../utils/user.default';
 
 import type { UpdateUserDto } from '../dtos/update.user.dto';
 import type { UserDto } from '../dtos/user.dto';
@@ -16,65 +16,65 @@ import type { User } from '../entities/user.entity';
 export class UsersServiceMock implements UsersService {
 
   public async findOneById(id: string): Promise<User> {
-    if (id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== userDefault.id) throw new NotFoundException('User not found');
 
-    return await defaultUser;
+    return await userDefault;
   }
 
   public async findOneByEmail(email: string): Promise<User> {
-    if (email !== defaultUser.email)
+    if (email !== userDefault.email)
       throw new NotFoundException('User not found');
 
-    return await defaultUser;
+    return await userDefault;
   }
 
-  public async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    return await { ...defaultUser, ...createUserDto };
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
+    return await { ...userDefault, ...createUserDto };
   }
 
   public async updateUser(id: string, dto: UpdateUserDto): Promise<User> {
-    if (id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== userDefault.id) throw new NotFoundException('User not found');
 
-    return await { ...defaultUser, ...dto };
+    return await { ...userDefault, ...dto };
   }
 
   public async deleteUser(id: string): Promise<void> {
-    if (id !== defaultUser.id) {
+    if (id !== userDefault.id) {
       throw await new BadRequestException('Failed to delete');
     }
   }
 
   public async validateUser(dto: AuthDto): Promise<UserDto> {
-    if (dto.email !== defaultUser.email) {
+    if (dto.email !== userDefault.email) {
       throw new NotFoundException('Email not found');
     }
 
     const passwordsMatches = await bcrypt.compare(
       dto.password,
-      defaultUser.password,
+      userDefault.password,
     );
 
     if (!passwordsMatches) {
       throw new ForbiddenException('Invalid password');
     }
 
-    return defaultUser;
+    return userDefault;
   }
 
   public async validateToken(id: string, rt: string): Promise<UserDto> {
-    if (id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== userDefault.id) throw new NotFoundException('User not found');
 
-    if (!defaultUser.hashedRt) throw new ForbiddenException('Token expired');
+    if (!userDefault.hashedRt) throw new ForbiddenException('Token expired');
 
-    const rtMathes = await bcrypt.compare(rt, defaultUser.hashedRt);
+    const rtMathes = await bcrypt.compare(rt, userDefault.hashedRt);
 
     if (!rtMathes) throw new ForbiddenException('Invalid refresh token');
 
-    return defaultUser;
+    return userDefault;
   }
 
   public async updateToken(id: string, rt: string | null): Promise<boolean> {
-    if (id !== defaultUser.id) throw new NotFoundException('User not found');
+    if (id !== userDefault.id) throw new NotFoundException('User not found');
 
     if (rt) return await true;
 
