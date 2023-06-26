@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CategoryRepository } from '../../repositories/category.repository';
 
 import type { CreateCategoryDto } from '../../dtos/CreateCategory.dto';
@@ -12,8 +12,6 @@ export class CategoriesServiceImpl implements CategoriesService {
 
   public async findAll(): Promise<CategoryDto[]> {
     const categories = await this._categoryRepo.find();
-
-    if(!categories || !categories.length) throw new NotFoundException('Categories not found');
 
     return categories;
   }

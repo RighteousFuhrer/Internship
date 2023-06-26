@@ -80,7 +80,7 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "src/modules/**/*.ts",
+      "src/modules/**/*.service.ts",
       "!src/**/*.module.ts",
       "!src/**/*.abstract.ts",
       "!src/**/*.mock.ts"

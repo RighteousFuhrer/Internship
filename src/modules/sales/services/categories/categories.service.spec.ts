@@ -26,7 +26,7 @@ describe('CategoriesService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return and array of categories', async () => {
+  it('should return an array of categories', async () => {
     expect(await service.findAll()).toEqual([categoryDefault]);
   });
 

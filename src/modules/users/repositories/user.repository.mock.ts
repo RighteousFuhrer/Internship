@@ -1,4 +1,4 @@
-import { userDefault } from '../utils/user.default';
+import { userFirst, userSecond } from '../utils/user.default';
 
 import type { CreateUserDto } from '../dtos/createUser.dto';
 import type { User } from '../entities/user.entity';
@@ -16,16 +16,17 @@ type UpdateResult = {
 
 export const usersRepositoryMock = {
   findOne: jest.fn(async ({ where }: FindSchema): Promise<User | null> => {
-    if (where.id === userDefault.id || where.email === userDefault.email) {
-      return await userDefault;
+    if (where.id === userFirst.id || where.email === userFirst.email) {
+      return await userFirst;
+    } else if (where.id === userSecond.id || where.email === userSecond.email) {
+      return await userSecond;
     }
-
     return null;
   }),
 
   create: jest.fn(async (dto: CreateUserDto): Promise<User> => {
     return await {
-      ...userDefault,
+      ...userFirst,
       ...dto,
       id: '2',
     };
@@ -36,7 +37,7 @@ export const usersRepositoryMock = {
   }),
 
   delete: jest.fn(async (id: string): Promise<UpdateResult> => {
-    if (id !== userDefault.id) {
+    if (id !== userFirst.id) {
       return await { affected: 0 };
     }
     return await { affected: 1 };
