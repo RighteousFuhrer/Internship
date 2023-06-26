@@ -79,9 +79,11 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/services/**/*.(t|j)s"
+      "src/modules/**/*.ts",
+      "!src/**/*.module.ts",
+      "!src/**/*.abstract.ts",
+      "!src/**/*.mock.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

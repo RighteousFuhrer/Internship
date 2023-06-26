@@ -11,6 +11,7 @@ import type { CreateProductDto } from '../../dtos/createProduct.dto';
 import type { ProductSearchParams } from '../../dtos/searchByCategoryId.dto';
 import type { Product } from '../../entities/product.entity';
 import type { ProductsService } from './products.service.abstract';
+import type { ProductDto } from '../../dtos/product.dto';
 
 @Injectable()
 export class ProductsServiceImpl implements ProductsService {
@@ -20,19 +21,19 @@ export class ProductsServiceImpl implements ProductsService {
     private readonly _categoryRepo: CategoryRepository,
   ) {}
 
-  public async findOne(id: string): Promise<Product> {
-    const products = await this._productRepo.findOne({
+  public async findOne(id: string): Promise<ProductDto> {
+    const product = await this._productRepo.findOne({
       where: {
         id: id,
       },
     });
 
-    if (!products) throw new NotFoundException('Product not found');
+    if (!product) throw new NotFoundException('Product not found');
 
-    return products;
+    return product;
   }
 
-  public async findAll(params?: ProductSearchParams): Promise<Product[]> {
+  public async findAll(params?: ProductSearchParams): Promise<ProductDto[]> {
     let products: Product[] = [];
 
     if (params && params.categoryId) {
@@ -54,7 +55,7 @@ export class ProductsServiceImpl implements ProductsService {
     return products;
   }
 
-  public async create(dto: CreateProductDto): Promise<Product> {
+  public async create(dto: CreateProductDto): Promise<ProductDto> {
     const category = await this._categoryRepo.findOne({
       where: {
         id: dto.categoryId,

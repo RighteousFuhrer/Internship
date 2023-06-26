@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiTags, ApiParam } from '@nestjs/swagger';
-import { ProductsService } from '../services/products/products.service.abstract';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from '../dtos/createProduct.dto';
-import { SearchByIdDto } from '../dtos/serachById.dto';
 import { ProductSearchParams } from '../dtos/searchByCategoryId.dto';
+import { SearchByIdDto } from '../dtos/serachById.dto';
+import { ProductsService } from '../services/products/products.service.abstract';
 
-import type { Product } from '../entities/product.entity';
+import type { ProductDto } from '../dtos/product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -28,7 +28,7 @@ export class ProductsController {
   @Get('/')
   public async getAll(
     @Param() params: ProductSearchParams,
-  ): Promise<Product[]> {
+  ): Promise<ProductDto[]> {
     return this._productsService.findAll(params);
   }
 
@@ -39,12 +39,12 @@ export class ProductsController {
     required: true,
   })
   @Get('/:id')
-  public async getOne(@Param() params: SearchByIdDto): Promise<Product> {
+  public async getOne(@Param() params: SearchByIdDto): Promise<ProductDto> {
     return this._productsService.findOne(params.id);
   }
 
   @Post()
-  public async create(@Body() dto: CreateProductDto): Promise<Product> {
+  public async create(@Body() dto: CreateProductDto): Promise<ProductDto> {
     dto;
     return this._productsService.create(dto);
   }

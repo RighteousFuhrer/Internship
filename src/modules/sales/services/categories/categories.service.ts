@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException, UnprocessableEntity
 import { CategoryRepository } from '../../repositories/category.repository';
 
 import type { CreateCategoryDto } from '../../dtos/CreateCategory.dto';
-import type { Category } from '../../entities/category.entity';
+import type { CategoryDto } from '../../dtos/category.dto';
 import type { CategoriesService } from './categories.service.abstract';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class CategoriesServiceImpl implements CategoriesService {
 
   constructor(private readonly _categoryRepo: CategoryRepository) {}
 
-  public async findAll(): Promise<Category[]> {
+  public async findAll(): Promise<CategoryDto[]> {
     const categories = await this._categoryRepo.find();
 
     if(!categories || !categories.length) throw new NotFoundException('Categories not found');
@@ -18,7 +18,7 @@ export class CategoriesServiceImpl implements CategoriesService {
     return categories;
   }
 
-  public async create(dto: CreateCategoryDto): Promise<Category> {
+  public async create(dto: CreateCategoryDto): Promise<CategoryDto> {
     const category = await this._categoryRepo.save(dto);
 
     if(!category) throw new UnprocessableEntityException('Failed to create category');
